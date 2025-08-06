@@ -31,4 +31,6 @@ To replicate this data structure:
 2. Download only the files listed here.
 3. Place them in the `raw_data` directory.
 
+> ⚠️ **Do not rename the files.** All scripts and notebooks in this project rely on the original filenames provided by CLUE. Maintaining the exact filenames ensures full reproducibility of the analysis pipeline.
+
 > 🗃️ Due to their large size, these files are not tracked in the GitHub repository. Please refer to the project documentation for guidance on preprocessing and analysis.
