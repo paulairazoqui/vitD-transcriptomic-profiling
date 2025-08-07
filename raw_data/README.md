@@ -1,10 +1,10 @@
-# 📁 Raw Data: LINCS L1000 Subset for Vitamin D Transcriptomic Profiling
+## Raw Data: LINCS L1000 Subset for Vitamin D Transcriptomic Profiling
 
 This folder contains a curated subset of raw files from the [CLUE LINCS2020 dataset](https://clue.io/data/CMap2020#LINCS2020), part of the Connectivity Map (CMap) project. The selection includes metadata and a single expression matrix required to analyze the transcriptomic effects of Vitamin D and its analogs in human cell lines.
 
 These files were downloaded manually from the official source and are kept in their original format.
 
-## 📄 Metadata Files
+## Metadata Files
 
 - `cellinfo_beta.txt`: Cell line metadata.
 - `compoundinfo_beta.txt`: Compound-level metadata.
@@ -12,7 +12,7 @@ These files were downloaded manually from the official source and are kept in th
 - `instinfo_beta.txt`: Signature-level metadata (perturbation, time, dose, etc.).
 - `siginfo_beta.txt`: Supplementary metadata for signatures.
 
-## 📊 Expression Matrix
+## Expression Matrix
 
 Only one expression matrix was downloaded, containing Level 5 moderated z-scores for compound perturbagens:
 
