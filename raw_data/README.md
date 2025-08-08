@@ -4,7 +4,7 @@ This folder contains a curated subset of raw files from the [CLUE LINCS2020 data
 
 These files were downloaded manually from the official source and are kept in their original format.
 
-## Metadata Files
+### Metadata Files
 
 - `cellinfo_beta.txt`: Cell line metadata.
 - `compoundinfo_beta.txt`: Compound-level metadata.
@@ -12,7 +12,7 @@ These files were downloaded manually from the official source and are kept in th
 - `instinfo_beta.txt`: Signature-level metadata (perturbation, time, dose, etc.).
 - `siginfo_beta.txt`: Supplementary metadata for signatures.
 
-## Expression Matrix
+### Expression Matrix
 
 Only one expression matrix was downloaded, containing Level 5 moderated z-scores for compound perturbagens:
 
@@ -20,10 +20,22 @@ Only one expression matrix was downloaded, containing Level 5 moderated z-scores
 
 > ⚠️ Other available GCTX files were excluded to reduce storage requirements and focus the analysis on compounds relevant to our research question.
 
+## 🕒 Version and Download Timestamp
+All files listed above were manually downloaded in August 2025.
+
+At the time of download, the most recent available version of the dataset was:
+
+CMAP LINCS 2020
+- Updated: November 23, 2021
+- Created: November 20, 2020
+- Source: [https://clue.io/data/CMap2020#LINCS2020](https://clue.io/data/CMap2020#LINCS2020)
+
+This ensures that all analyses are based on the latest officially published release of the LINCS L1000 dataset available as of that date.
+
 ## 📥 How to Reproduce This Folder
 
 All files were downloaded from:  
-🔗 https://clue.io/data/CMap2020#LINCS2020  
+🔗 [https://clue.io/data/CMap2020#LINCS2020](https://clue.io/data/CMap2020#LINCS2020) 
 ➡️ Section: *LINCS2020 - L1000 data*
 
 To replicate this data structure:
