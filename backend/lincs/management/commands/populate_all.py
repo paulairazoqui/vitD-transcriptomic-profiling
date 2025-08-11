@@ -6,10 +6,10 @@ from django.core.management.base import BaseCommand
 POPULATE_ORDER = [
     "populate_cellline",
     "populate_compound",
-    "populate_instance",
     "populate_signature",
+    "populate_instance",
     "populate_gene",
-    "populate_expressionmatrixentry",
+    "populate_expressionmatrixentry"
 ]
 
 class Command(BaseCommand):
