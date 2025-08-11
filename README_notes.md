@@ -52,3 +52,39 @@ This exploratory analysis characterizes the transcriptional responses of human c
 ---
 
 > All results in this section were derived from the Level 5 z-score matrix (`level5_beta_trt_cp_n720216x12328.gctx`) and relevant metadata downloaded from [CLUE.io](https://clue.io/data/CMap2020). For full reproducibility, see data processing scripts in the `notebooks/eda/` folder.
+
+
+### Linking `Instance` to `Signature`
+
+In the original LINCS L1000 data, the file `instinfo_beta.txt` contains detailed metadata for each experimental instance (e.g., plate ID, well ID, QC metrics), but it **does not include the `sig_id`** needed to establish the foreign key relationship with the `Signature` table.
+
+Instead, the `sig_id` can be found in `siginfo_beta.txt`, specifically in the `distil_ids` column. This column stores a list of `instance_id` values (`sample_id` in `instinfo_beta.txt`) that belong to each signature.
+
+To correctly populate the `Instance` model, the following steps are required:
+
+1. **Load** `instinfo_beta.txt` to extract all instance-level data.
+2. **Load** `siginfo_beta.txt` and build a mapping from each `instance_id` to its corresponding `sig_id` via the `distil_ids` field.
+3. **Insert** records into the `Instance` table, assigning the appropriate `Signature` foreign key for each instance.
+
+This two-file approach ensures relational integrity in the database and preserves the correct mapping between raw LINCS instances and their associated signatures.
+
+---
+
+### Instances without `sig_id` match
+
+During the population of the `Instance` table, some rows from `instinfo_beta.txt` may not find a matching `sig_id` in `siginfo_beta.txt`. This is expected behavior and not an error.
+
+**Why it happens:**
+- The project may only load a filtered subset of signatures into the database (e.g., specific compounds, cell lines, or experimental conditions).
+- `instinfo_beta.txt` contains instances from *all* LINCS experiments, including those not present in our `Signature` table.
+- When an `instance_id` (`sample_id`) is not listed in any `distil_ids` from `siginfo_beta.txt` that we have loaded, it is skipped to preserve referential integrity.
+
+**Impact:**
+- Skipped instances are simply ignored; they do not appear in the database.
+- The `no sig match` count in the logs is a diagnostic to show how many rows were skipped for this reason.
+
+**Conclusion:**
+This filtering is intentional. It ensures that every `Instance` stored in the database has a valid foreign key reference to an existing `Signature`.
+
+---
+

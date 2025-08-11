@@ -1,18 +1,23 @@
 
 from django.db import models
 
+from django.db import models
+
 class Compound(models.Model):
     pert_id = models.CharField(max_length=20, primary_key=True)
-    pert_iname = models.CharField(max_length=100)
-    pert_type = models.CharField(max_length=50, blank=True, null=True)
-    moa = models.TextField(blank=True, null=True)  # mechanism of action (optional)
+    cmap_name = models.CharField(max_length=100)
+    target = models.TextField(blank=True, null=True)
+    moa = models.TextField(blank=True, null=True)
+    canonical_smiles = models.TextField(blank=True, null=True)
+    inchi_key = models.CharField(max_length=100, blank=True, null=True)
+    compound_aliases = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Compound"
         verbose_name_plural = "Compounds"
 
     def __str__(self):
-        return self.pert_iname
+        return self.cmap_name
     
 class CellLine(models.Model):
     cell_id = models.CharField(max_length=40, primary_key=True)  # Ej: MCF7
