@@ -1,6 +1,27 @@
 # Database Documentation (LINCS L1000 – Project Subset)
 
-> **Scope:** Static, publication-grade relational database designed to analyze transcriptomic responses to vitamin D compounds while remaining reusable for future compound families.
+## Table of Contents
+1. [Overview](#overview)
+    - [Rationale for Full Metadata Loading](#rationale-for-full-metadata-loading)
+    - [Scope and Subset](#scope-and-subset)
+2. [Record Counts](#record-counts-current-build)
+3. [Entity–Relationship Diagram (MER)](#entityrelationship-diagram-mer)
+4. [Database Schema](#database-schema)
+5. [Table-by-Table](#table-by-table)
+    - [Compound](#compound)
+    - [CellLine](#cellline)
+    - [Gene](#gene)
+    - [Signature](#signature)
+    - [Instance](#instance)
+    - [ExpressionMatrixEntry](#expressionmatrixentry)
+6. [Data Sources](#data-sources)
+7. [Technical Considerations](#technical-considerations)
+8. [Typical Usage in This Project](#typical-usage-in-this-project)
+9. [Example Queries (SQL)](#example-queries-sql)
+10. [Django Models Snippet](#django-models-snippet)
+11. [Django ORM Examples](#django-orm-examples)
+12. [Reproducibility & Extensibility](#reproducibility--extensibility)
+13. [Creating and Populating the Database](#creating-and-populating-the-database)
 
 ---
 
@@ -16,6 +37,16 @@
 Even though this project focuses exclusively on vitamin D compounds, the database includes the complete set of cell lines, compounds, genes, and metadata from the LINCS L1000 dataset.  
 This design decision was made to ensure **future reusability** — researchers can easily integrate other expression matrices (e.g., other compound families) without repopulating the core metadata tables.  
 The only partial table is the expression matrix, which was loaded only for the subset relevant to this project.
+
+### Scope and Subset
+This database contains the **full set of metadata tables** from the LINCS L1000 dataset (cell lines, compounds, genes, signatures, and instances), but the **expression matrix** is intentionally limited to a **subset of signatures** relevant to this project.  
+The subset was defined based on:
+- **Compounds:** Seven vitamin D compounds and analogs identified as relevant to the research scope.
+- **Cell lines:** The most represented cell lines within the vitamin D subset.
+- **Treatment time:** Fixed at 24 hours to maximize comparability.
+
+As a result, expression values are **available only for 258 signatures**, each with a complete profile for all 12,328 genes. All other signatures remain in the metadata tables but have no associated expression values in this build.
+
 
 ---
 
@@ -331,5 +362,4 @@ python manage.py populate_signature --chunksize 100000
 python manage.py populate_instance --chunksize 100000
 python manage.py populate_expressionmatrixentry --chunksize 200000
 python manage.py validate_db
-
 ```
