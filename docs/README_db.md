@@ -1,4 +1,4 @@
-# Database Documentation (LINCS L1000 – Project Subset)
+# Database Documentation (vitD-transcriptomic-profiling – Project Subset)
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -223,15 +223,11 @@ The following diagram summarizes the structure of the SQLite database, including
   *(filenames preserved as downloaded; not renamed)*.
 
 - **Expression (processed):** `processed_data/vitD_expression_matrix.csv`  
-  This file is a **filtered extract** from the original  
-  `level5_beta_trt_cp_n720216x12328.gctx` (≈33 GB).  
-  The filtering criteria were defined based on an initial exploratory data analysis (EDA) of the LINCS L1000 dataset, focusing on:
-    - **Compounds:** Seven vitamin D compounds and analogs identified as relevant for the project scope.
-    - **Cell lines:** The most represented cell lines within the vitamin D subset.
-    - **Treatment time:** Fixed at **24 hours** to maximize comparability across conditions.
+  Filtered extract from the original  
+  `level5_beta_trt_cp_n720216x12328.gctx` (≈33 GB), containing only the signatures defined in [Scope and Subset](#scope-and-subset).  
+  This subset includes **258 signatures**, each with a complete expression profile for all **12,328 genes**.
 
-
->The final file contains **258 signatures** matching these filters, each with complete expression profiles for all **12,328 genes**.
+> The final file contains **258 signatures** matching these filters, each with complete expression profiles for all **12,328 genes**.
 
 > **Naming policy:** Column names and data types are **preserved** from the original LINCS metadata, with **minimal cleaning** for format consistency. No feature engineering or derivations were introduced in this build.
 
@@ -245,7 +241,7 @@ The following diagram summarizes the structure of the SQLite database, including
   - `Gene (gene_symbol)`
   - `ExpressionMatrixEntry (signature_id, gene_id)` (composite)
 - **Limitations:**
-  - Expression values are available **only** for the 258 signatures in scope.
+  - Expression values are available **only** for the 258 signatures in [Scope and Subset](#scope-and-subset).
   - Other perturbation types may appear in metadata but lack expression values in this filtered matrix.
   - The database is **static**; any extension requires explicit ETL steps.
 - **Portability:** Schema is RDBMS‑agnostic and can be migrated to PostgreSQL/MySQL via Django migrations.  
