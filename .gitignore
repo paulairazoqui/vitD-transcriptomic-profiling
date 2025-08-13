@@ -9,14 +9,6 @@ backend/db.sqlite3
 *.pyc
 
 # Ignore subset exported
-exports/subset_cell_lines_meta.csv
-exports/subset_compounds_meta.csv
-exports/subset_expression_long.csv
-exports/subset_expression_wide_gene_id.csv
-exports/subset_expression_wide_symbol.csv
-exports/subset_genes_meta.csv
-exports/subset_signatures_meta.csv
-
 data/raw_data/cellinfo_beta.txt
 data/raw_data/geneinfo_beta.txt
 data/raw_data/compoundinfo_beta.txt
@@ -28,7 +20,6 @@ data/processed_data/instinfo_vitD_subset.csv
 data/processed_data/sig_ids_vitD_filtered.txt
 data/processed_data/siginfo_vitD_filtered.csv
 data/processed_data/vitD_expression_matrix.csv
-
 
 data/exports/subset_cell_lines_meta.csv
 data/exports/subset_compounds_meta.csv
