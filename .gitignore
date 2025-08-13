@@ -12,6 +12,8 @@ backend/db.sqlite3
 # Python cache
 **/__pycache__/
 *.pyc
+
+# Ignore subset exported
 exports/subset_cell_lines_meta.csv
 exports/subset_compounds_meta.csv
 exports/subset_expression_long.csv
