@@ -359,3 +359,54 @@ python manage.py populate_instance --chunksize 100000
 python manage.py populate_expressionmatrixentry --chunksize 200000
 python manage.py validate_db
 ```
+
+### 📤 Subset Export Command (`export_subset.py`)
+
+This management command exports a **fixed project subset** from the LINCS L1000 database — specifically, **vitamin D and analog compounds** assayed at **24 hours** in the following cell lines: `PC3`, `MCF7`, `A549`, `U2OS`, `HA1E`.
+
+**Main filters applied:**
+- `cmap_name` contains one of the default vitamin D keywords:
+  `calcitriol`, `calcipotriol`, `maxacalcitol`, `seocalcitol`,
+  `ercalcitriol`, `tacalcitol`, `paricalcitol`
+- `pert_time = 24`
+- `cell_id ∈ {PC3, MCF7, A549, U2OS, HA1E}`
+
+**Optional flags:**
+- `--long` → also exports long/tidy expression format  
+- `--landmark_only` → restrict to 978 landmark genes (`feature_space = landmark`)  
+- `--with_symbol_matrix` → also exports symbol-averaged wide matrix  
+- `--limit_sigs N` → limit the number of signatures exported  
+- `--outdir PATH` → change output directory (default: `../exports`)
+
+**Exported files:**
+| File | Description |
+|------|-------------|
+| `subset_signatures_meta.csv` | Full signature metadata for the subset |
+| `subset_compounds_meta.csv` | Full compound metadata for the subset |
+| `subset_cell_lines_meta.csv` | Full cell line metadata for the subset |
+| `subset_genes_meta.csv` | Full gene metadata (including `feature_space`) for genes present in the subset |
+| `subset_expression_wide_gene_id.csv` | Wide matrix (rows = `gene_id`, cols = `sig_id`), includes `gene_symbol` & `feature_space` columns |
+| `subset_expression_wide_symbol.csv` | Wide matrix averaged by `gene_symbol` (if `--with_symbol_matrix`) |
+| `subset_expression_long.csv` | Long/tidy format with one row per `(gene_id, sig_id)` pair (if `--long`) |
+
+**Example run:**
+```bash
+python manage.py export_subset --outdir "../exports" --long --with_symbol_matrix
+```
+
+**Example output:**
+``` java
+✅ Signatures selected: 422
+📝 Signatures (full cols) → ../exports/subset_signatures_meta.csv
+📝 Compounds (full cols) → ../exports/subset_compounds_meta.csv
+📝 Cell lines (full cols) → ../exports/subset_cell_lines_meta.csv
+📝 Genes (full cols, includes feature_space) → ../exports/subset_genes_meta.csv
+🔎 Collapsed duplicate pairs: 0
+📦 Wide (gene_id) → ../exports/subset_expression_wide_gene_id.csv (shape 12328×422)
+📦 Wide (gene_symbol, averaged) → ../exports/subset_expression_wide_symbol.csv (shape 12327×422)
+📦 Long (deduped) → ../exports/subset_expression_long.csv (rows 3,180,624)
+🎯 Export finished + SYMBOL-MATRIX. Filters: vitamin D keywords + 24h + PC3/MCF7/A549/U2OS/HA1E.```
+
+> **Note:**  
+> Due to their size, the exported CSV files are **not included in the public repository** and have been added to `.gitignore`.  
+> All files can be regenerated locally by running the `export_subset` command with the desired options, provided the database has been populated.
