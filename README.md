@@ -15,46 +15,28 @@ This work combines transparent data processing, rigorous exploratory data analys
 
 ---
 
-## 🔁 Reproducibility: setting up the environment
+## 🔁 Quick start (reproducibility)
 
-This project uses a virtual environment to ensure reproducibility and avoid dependency issues.
-
-### 1. Clone the repository
+To reproduce the environment:
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/paulairazoqui/vitD-transcriptomic-profiling.git
 cd vitD-transcriptomic-profiling
-```
 
-### 2. Create and activate the virtual environment
-
-```bash
-# Create environment (only once)
-python -m venv env
-
-# Activate it
+# 2. Create and activate the virtual environment
+python -m venv vitd_env
 # On Windows (PowerShell)
-.\env\Scripts\Activate
-
+.\vitd_env\Scripts\activate
 # On Linux/Mac
-source env/bin/activate
+source vitd_env/bin/activate
 
-```
-
-
-### 3. Install the required packages
-
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
 ```
 
-You can now run the notebooks safely and reproducibly!
-
-### 4. To deactivate the environment
-
-```bash
-deactivate
-```
+> 💡 For detailed setup instructions, including OS-specific notes and troubleshooting, see  
+> [docs/environment_setup.md](docs/environment_setup.md).
 
 ---
 
