@@ -17,7 +17,7 @@ class Command(BaseCommand):
     help = "Populate CellLine table from cellinfo_beta.txt (one-time static load)"
 
     def handle(self, *args, **options):
-        filepath = "../raw_data/cellinfo_beta.txt"
+        filepath = "../data/raw_data/cellinfo_beta.txt"
 
         try:
             if CellLine.objects.exists():

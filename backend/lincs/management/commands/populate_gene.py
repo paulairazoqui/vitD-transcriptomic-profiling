@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from lincs.models import Gene
 
-FILEPATH_GENE = "../raw_data/geneinfo_beta.txt"
+FILEPATH_GENE = "../data/raw_data/geneinfo_beta.txt"
 CHUNK_SIZE = 50_000
 BATCH_SIZE = 10_000
 

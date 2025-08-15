@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Populate Compound table from compoundinfo_beta.txt"
 
     def handle(self, *args, **options):
-        filepath = "../raw_data/compoundinfo_beta.txt"
+        filepath = "../data/raw_data/compoundinfo_beta.txt"
 
         try:
             df = pd.read_csv(filepath, sep="\t", low_memory=False)

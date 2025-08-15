@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from lincs.models import ExpressionMatrixEntry, Gene, Signature
 
-FILEPATH_MATRIX = "../processed_data/vitD_expression_matrix.csv"
+FILEPATH_MATRIX = "../data/processed_data/vitD_expression_matrix.csv"
 CHUNK_SIZE = 1_000  # rows (genes) per chunk to keep memory under control
 BATCH_SIZE = 5_000  # bulk_create batch size
 

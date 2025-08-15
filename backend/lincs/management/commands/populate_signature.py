@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Populate Signature table from siginfo_beta.txt (one-time static load)"
 
     def handle(self, *args, **options):
-        filepath = "../raw_data/siginfo_beta.txt"
+        filepath = "../data/raw_data/siginfo_beta.txt"
 
         try:
             df = pd.read_csv(filepath, sep="\t", low_memory=False)

@@ -6,8 +6,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from lincs.models import Instance, Signature
 
-FILEPATH_INST = "../raw_data/instinfo_beta.txt"
-FILEPATH_SIG  = "../raw_data/siginfo_beta.txt"
+FILEPATH_INST = "../data/raw_data/instinfo_beta.txt"
+FILEPATH_SIG  = "../data/raw_data/siginfo_beta.txt"
 
 CHUNK_INST = 200_000
 CHUNK_SIG  = 200_000

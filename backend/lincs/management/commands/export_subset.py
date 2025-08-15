@@ -21,7 +21,7 @@ class Command(BaseCommand):
     )
 
     def add_arguments(self, parser):
-        parser.add_argument("--outdir", type=str, default="../exports", help="Output directory.")
+        parser.add_argument("--outdir", type=str, default="../data/exports", help="Output directory.")
         parser.add_argument("--long", action="store_true", help="Also export long/tidy expression table.")
         parser.add_argument("--limit_sigs", type=int, default=None, help="Optional cap on number of signatures.")
         parser.add_argument("--landmark_only", action="store_true",
