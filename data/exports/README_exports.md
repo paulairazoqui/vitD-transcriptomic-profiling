@@ -18,7 +18,6 @@ They are **ready for downstream analysis** (e.g., EDA, modeling) and contain no 
   2. The processing scripts in `backend/lincs/management/commands/`
 
 ## Naming Convention
-## Naming Convention
 
 ```text
 subset_<entity>_meta.csv           # Metadata for a specific entity (compounds, cell lines, genes, signatures)
