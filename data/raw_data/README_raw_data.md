@@ -26,6 +26,7 @@ These files were downloaded manually from the official source and are kept in th
 | `siginfo_beta.txt` | `ab609fc04fab21180b07833119d1c7b6` | `AB609FC04FAB21180B07833119D1C7B6` | ✅ Match |
 
 </details>
+<br>
 
 > ℹ️ We publish **SHA256** as the primary integrity hash. **MD5** hashes are shown only to cross-check with the values provided by CLUE.
 
