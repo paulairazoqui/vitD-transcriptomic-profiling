@@ -55,3 +55,5 @@ data/exports/subset_expression_wide_gene_id.csv
 data/exports/subset_expression_wide_symbol.csv
 data/exports/subset_genes_meta.csv
 data/exports/subset_signatures_meta.csv
+data/exports/expression_matrix_clean.parquet
+data/exports/signature_metadata_clean.csv
