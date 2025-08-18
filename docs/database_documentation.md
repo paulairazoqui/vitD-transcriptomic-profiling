@@ -405,7 +405,8 @@ python manage.py export_subset --outdir "../exports" --long --with_symbol_matrix
 📦 Wide (gene_id) → ../exports/subset_expression_wide_gene_id.csv (shape 12328×422)
 📦 Wide (gene_symbol, averaged) → ../exports/subset_expression_wide_symbol.csv (shape 12327×422)
 📦 Long (deduped) → ../exports/subset_expression_long.csv (rows 3,180,624)
-🎯 Export finished + SYMBOL-MATRIX. Filters: vitamin D keywords + 24h + PC3/MCF7/A549/U2OS/HA1E.```
+🎯 Export finished + SYMBOL-MATRIX. Filters: vitamin D keywords + 24h + PC3/MCF7/A549/U2OS/HA1E.
+```
 
 > **Note:**  
 > Due to their size, the exported CSV files are **not included in the public repository** and have been added to `.gitignore`.  
