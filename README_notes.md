@@ -88,3 +88,17 @@ This filtering is intentional. It ensures that every `Instance` stored in the da
 
 ---
 
+VDR Expression in the Cell Lines (Based on Tissue Origin)
+
+
+| Cell Line                 | Tissue of Origin | VDR Expression Insight                                                                                                                                |
+| ------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A549** (lung carcinoma) | Lung             | *Low VDR expression reported* in A549 cells, especially with KRAS mutations ([PMC][1]).                                                               |
+| **MCF7** (breast cancer)  | Breast           | *High endogenous VDR expression*, common target in knockdown studies ([PMC][2], [BioMed Central][3]).                                                 |
+| **PC3** (prostate cancer) | Prostate         | No direct evidence from the hits, but prostate epithelium generally expresses VDR—common in hormone-responsive research (though unconfirmed for PC3). |
+| **U2OS** (osteosarcoma)   | Bone             | No direct data found here. Given bone’s responsiveness to vitamin D, some basal VDR expression is plausible, but needs confirmation.                  |
+| **HA1E** (renal origin)   | Kidney           | No direct citation for VDR in HA1E; kidney tissue typically expresses VDR, but specific data on this line wasn’t found.                               |
+
+[1]: https://pmc.ncbi.nlm.nih.gov/articles/PMC3396768/?utm_source=chatgpt.com "Characterization of vitamin D receptor (VDR) in lung ..."
+[2]: https://pmc.ncbi.nlm.nih.gov/articles/PMC5432290/?utm_source=chatgpt.com "The vitamin D receptor is involved in the regulation ..."
+[3]: https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-10-499?utm_source=chatgpt.com "Anti-proliferative action of vitamin D in MCF7 is still active after ..."
