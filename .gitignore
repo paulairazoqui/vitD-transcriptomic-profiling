@@ -57,7 +57,3 @@ data/exports/subset_genes_meta.csv
 data/exports/subset_signatures_meta.csv
 data/exports/expression_matrix_clean.parquet
 data/exports/signature_metadata_clean.csv
-
-
-libs/h.all.v2025.1.Hs.symbols.gmt
-libs/c2.cp.reactome.v2025.1.Hs.symbols.gmt
