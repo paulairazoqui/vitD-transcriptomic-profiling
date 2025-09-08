@@ -1,11 +1,4 @@
 # src/vitd_utils/dataset.py
-"""
-Dataset helpers for loading, standardizing metadata, aligning matrices,
-and building per-context effect tables.
-
-This removes ad-hoc 'patches' from notebooks and centralizes logic.
-"""
-
 from __future__ import annotations
 from typing import Iterable, Optional, Tuple
 import pandas as pd
@@ -21,12 +14,12 @@ def _pick_first(cols: Iterable[str], candidates) -> Optional[str]:
 
 def standardize_meta(meta: pd.DataFrame) -> pd.DataFrame:
     """
-    Return a copy of `meta` with standardized column names:
-    - 'sig_id'   (from: sig_id | signature_id | sig)
-    - 'cell_id'  (from: cell_id | cell)
-    - 'dose'     (from: dose | pert_dose | pert_idose | x_dose)
-    - 'analog'   (from: cmap_name | pert_iname | pert_desc | pert_name | compound | drug) [optional]
-    Also coerces 'dose' to numeric (if present).
+    Standardize metadata columns:
+      - 'sig_id'   from: sig_id | signature_id | sig
+      - 'cell_id'  from: cell_id | cell
+      - 'dose'     from: dose | pert_dose | pert_idose | x_dose
+      - 'analog'   from: cmap_name | pert_iname | pert_desc | pert_name | compound | drug (optional)
+    Coerces 'dose' to numeric if present.
     """
     if not isinstance(meta, pd.DataFrame):
         raise TypeError("meta must be a pandas DataFrame")
@@ -41,9 +34,9 @@ def standardize_meta(meta: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(f"Metadata is missing required columns. Found: {list(cols)}")
 
     rename_map = {}
-    if sig_col != "sig_id":   rename_map[sig_col] = "sig_id"
-    if cell_col != "cell_id": rename_map[cell_col] = "cell_id"
-    if dose_col and dose_col != "dose": rename_map[dose_col] = "dose"
+    if sig_col   != "sig_id":   rename_map[sig_col]   = "sig_id"
+    if cell_col  != "cell_id":  rename_map[cell_col]  = "cell_id"
+    if dose_col  and dose_col != "dose":   rename_map[dose_col]  = "dose"
     if analog_col and analog_col != "analog": rename_map[analog_col] = "analog"
 
     out = meta.copy()
@@ -56,12 +49,9 @@ def standardize_meta(meta: pd.DataFrame) -> pd.DataFrame:
     return out
 
 def align_exp_meta(exp: pd.DataFrame, meta: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Align expression matrix (genes × signatures) and metadata on standardized 'sig_id'.
-    Returns (exp_aligned, meta_aligned).
-    """
+    """Align expression (genes×signatures) and metadata on 'sig_id'."""
     if "sig_id" not in meta.columns:
-        raise ValueError("meta must contain a standardized 'sig_id' column (run standardize_meta first).")
+        raise ValueError("meta must contain 'sig_id' (run standardize_meta first).")
     sigs = set(meta["sig_id"])
     keep = [c for c in exp.columns if c in sigs]
     exp2 = exp[keep].copy()
@@ -69,11 +59,8 @@ def align_exp_meta(exp: pd.DataFrame, meta: pd.DataFrame) -> Tuple[pd.DataFrame,
     return exp2, meta2
 
 def effects_by_cell(exp: pd.DataFrame, meta: pd.DataFrame) -> pd.DataFrame:
-    """
-    Build gene × cell effects by averaging signatures within each cell line.
-    Requires standardized 'sig_id' and 'cell_id'.
-    """
+    """Build gene×cell effects by averaging signatures within each cell line."""
     if not {"sig_id", "cell_id"}.issubset(meta.columns):
-        raise ValueError("meta must contain 'sig_id' and 'cell_id' (run standardize_meta first).")
+        raise ValueError("meta must contain 'sig_id' and 'cell_id'.")
     indexer = meta.set_index("sig_id")["cell_id"]
     return exp.T.groupby(indexer).mean().T
