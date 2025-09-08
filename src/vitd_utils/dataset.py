@@ -24,6 +24,11 @@ def standardize_meta(meta: pd.DataFrame) -> pd.DataFrame:
     if not isinstance(meta, pd.DataFrame):
         raise TypeError("meta must be a pandas DataFrame")
 
+    meta = meta.copy()
+    meta.columns = meta.columns.str.strip()  # <— elimina espacios accidentales
+
+    cols = meta.columns
+
     cols = meta.columns
     sig_col    = _pick_first(cols, ["sig_id", "signature_id", "sig"])
     cell_col   = _pick_first(cols, ["cell_id", "cell"])
