@@ -19,6 +19,7 @@ Design goals
 from __future__ import annotations
 
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+from textwrap import fill
 from pathlib import Path
 import hashlib
 import json
@@ -517,37 +518,83 @@ def run_enrichment_axis_resumable(
 
 
 # ---------------------------------------------------------------------
-# Visualization
+# Visualization (improved)
 # ---------------------------------------------------------------------
+
 def dotplot_top(
     enr_results: Mapping[str, Optional[pd.DataFrame]],
     lib_name: str,
     axis: str = "cell",
     top_n: int = config.ENR_TOP_PATHWAYS,
+    fdr_cutoff: float = 0.05,
+    groups: Optional[List[str]] = None,      # e.g. ["A549","HA1E","MCF7","PC3","U2OS"]
+    wrap_width: int = 28,
+    vmax_cap: float = 2.5,
+    fig_width: float = 14.0,                  # wider canvas, fixed height scaling
+    left_margin: float = 0.30,               # reserved for long labels (0–1)
+    bottom_pad: float = 0.26,                # room for both legends at bottom
+    point_sizes: tuple = (26, 140),          # (min,max) marker sizes
 ) -> None:
     """
-    Dot-plot of top enriched pathways across groups.
+    Create a publication-optimized dot plot summarizing enrichment results.
 
     Parameters
     ----------
-    enr_results : Mapping[str, DataFrame|None]
-        Output slice: results[lib_name], i.e., {group: DataFrame}.
+    enr_results : Mapping[str, Optional[pd.DataFrame]]
+        Dictionary {group: enrichment_results}, where each DataFrame must contain:
+        - 'term' (str): pathway name
+        - 'ES' (float): enrichment score
+        - 'fdr_bh' (float): adjusted p-value (FDR)
+        - 'set_size' (int): gene set size
     lib_name : str
-        Library label to display on the plot title.
-    axis : "cell" | "analog", default "cell"
-        Axis for labeling (x-axis legend).
+        Name of the gene set library (for plot titles/labels).
+    axis : {"cell", "analog"}, default "cell"
+        Axis of grouping (cell lines vs analogs).
     top_n : int, default config.ENR_TOP_PATHWAYS
-        Number of top terms (by median -log10(FDR) across groups) to display.
+        Number of top pathways to keep (after FDR filtering).
+    fdr_cutoff : float, default 0.05
+        Only pathways with FDR < cutoff are considered before ranking.
+    groups : list of str, optional
+        Fixed x-axis categories (all shown even if missing results).
+    wrap_width : int, default 28
+        Maximum characters per line for wrapped pathway labels.
+    vmax_cap : float, default 2.5
+        Upper cap for -log10(FDR) color scale.
+    fig_width : float, default 14.0
+        Base figure width (scales with number of groups).
+    left_margin : float, default 0.30
+        Space reserved for long y-axis labels (fraction of figure width).
+    bottom_pad : float, default 0.26
+        Extra padding at bottom for legends (size + colorbar).
+    point_sizes : tuple(int, int), default (26, 140)
+        Min and max marker sizes used for scaling by set size.
+
+    Returns
+    -------
+    None
+        Displays the plot (and saves a PNG if config.SAVE_FIGS is True).
+
+    Notes
+    -----
+    - Color encodes significance (−log10 FDR), capped by `vmax_cap`.
+    - Point size encodes gene set size.
+    - Terms are ranked by median significance across groups.
+    - Legends: set size (left bottom) and horizontal colorbar (right bottom).
     """
+    # ------------- collect rows per group (filter by FDR, then take top_n) -------------
     coll = []
     for g, df in enr_results.items():
         if df is None or df.empty:
             continue
-        df2 = df.copy()
-        df2["neglogFDR"] = -np.log10(df2["fdr_bh"].replace(0, 1e-300))
-        df2 = df2.sort_values(["fdr_bh", "ES"], ascending=[True, False]).head(top_n)
-        df2["group"] = str(g)
-        coll.append(df2[["term", "group", "neglogFDR", "set_size"]])
+        tmp = df.copy()
+        if fdr_cutoff is not None:
+            tmp = tmp.loc[tmp["fdr_bh"] < fdr_cutoff]
+        if tmp.empty:
+            continue
+        tmp["neglogFDR"] = -np.log10(tmp["fdr_bh"].replace(0, 1e-300))
+        tmp = tmp.sort_values(["fdr_bh", "ES"], ascending=[True, False]).head(top_n)
+        tmp["group"] = str(g)
+        coll.append(tmp[["term", "group", "neglogFDR", "set_size"]])
 
     if not coll:
         print(f"[info] No results to plot for {lib_name}.")
@@ -555,27 +602,109 @@ def dotplot_top(
 
     M = pd.concat(coll, ignore_index=True)
 
-    # Keep top_n terms by median signal across groups
+    # Keep top_n *unique* terms overall by median signal
     keep_terms = (
         M.groupby("term")["neglogFDR"].median().sort_values(ascending=False).head(top_n).index
     )
-    M = M[M["term"].isin(keep_terms)]
+    M = M[M["term"].isin(keep_terms)].copy()
 
-    group_order = sorted(M["group"].unique())
+    # Desired x-axis groups (ensure all five are shown)
+    group_order = sorted(M["group"].unique()) if groups is None else list(groups)
+
+    # Wrap long pathway labels for readability
+    def _pretty(t: str) -> str:
+        return fill(str(t).replace("_", " "), width=wrap_width)
+    M["term_plot"] = M["term"].map(_pretty)
+
+    # Order y by median strength
     term_order = (
-        M.groupby("term")["neglogFDR"].median().sort_values(ascending=True).index
+        M.groupby("term_plot")["neglogFDR"].median().sort_values(ascending=True).index.tolist()
     )
-    plt.figure(figsize=(max(6, 1.2 * len(group_order)), max(4.5, 0.45 * len(term_order))))
-    ax = sns.scatterplot(
-        data=M, x="group", y="term", size="set_size", hue="neglogFDR", sizes=(40, 220)
+
+    # Enforce categorical ordering
+    M["group"] = pd.Categorical(M["group"], categories=group_order, ordered=True)
+    M["term_plot"] = pd.Categorical(M["term_plot"], categories=term_order, ordered=True)
+
+    # --- Full grid + dummy layer: make all group ticks exist even with no points ---
+    grid = pd.MultiIndex.from_product([term_order, group_order],
+                                      names=["term_plot", "group"]).to_frame(index=False)
+    merged = grid.merge(M, on=["term_plot", "group"], how="left")
+    missing_mask = merged["neglogFDR"].isna()
+
+    # Color scale
+    vmin = 0.0
+    vmax = min(max(M["neglogFDR"].max(), vmin + 0.1), vmax_cap)
+
+    # ----------------------- figure layout (wider, same height logic) -------------------
+    fig_h = max(5.0, 0.55 * len(term_order))
+    fig_w = max(fig_width, 1.1 * len(group_order))
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h))
+
+    # 1) Invisible dummy points to register categories
+    if missing_mask.any():
+        dummy = merged.loc[missing_mask, ["group", "term_plot"]].copy()
+        dummy["neglogFDR"] = vmin
+        dummy["set_size"] = 1
+        sns.scatterplot(
+            data=dummy,
+            x="group", y="term_plot",
+            hue="neglogFDR", palette="viridis", hue_norm=(vmin, vmax),
+            size="set_size", sizes=point_sizes,
+            linewidth=0, edgecolor=None, legend=False, ax=ax, alpha=0.0
+        )
+
+    # 2) Real points
+    sns.scatterplot(
+        data=M,
+        x="group", y="term_plot",
+        hue="neglogFDR", palette="viridis", hue_norm=(vmin, vmax),
+        size="set_size", sizes=point_sizes,
+        linewidth=0.3, edgecolor="black",
+        legend=False, ax=ax, alpha=1.0
     )
-    ax.set_xlabel("Group" + (" (cell line)" if axis == "cell" else " (analog)"))
+
+    # Axis labels/title
+    ax.set_xlabel("Group (cell line)" if axis == "cell" else "Group (analog)")
     ax.set_ylabel(f"Top pathways ({lib_name})")
+    ax.set_title(f"Enrichment summary — {lib_name} by {axis}")
+
+    # --- Force x ticks for ALL groups (even if some had no points) ---
+    ax.set_xticks(range(len(group_order)))
     ax.set_xticklabels(group_order, rotation=45, ha="right")
-    plt.title(f"Enrichment summary — {lib_name} by {axis}")
-    plt.tight_layout()
+
+    # ------------------------ legends at the bottom, side by side -----------------------
+    # Reserve space (left for labels, bottom for both legends, right small margin)
+    plt.subplots_adjust(left=left_margin, right=0.86, bottom=bottom_pad)
+
+    # (a) Size legend (left bottom)
+    from matplotlib.lines import Line2D
+    sz = M["set_size"].to_numpy()
+    pos = sz[sz > 0]
+    if pos.size > 0:
+        ticks = sorted(set([int(np.nanmin(pos)), int(np.nanmax(pos))]))
+    else:
+        ticks = [1]
+    handles = [
+        Line2D([0], [0], marker='o', linestyle='',
+               markersize=np.interp(v, [max(1, sz.min()), max(1, sz.max())], [6, 18]),
+               color='grey', alpha=0.75, label=str(v))
+        for v in ticks
+    ]
+    ax.legend(handles=handles, title="set_size",
+              loc="upper left", bbox_to_anchor=(0.02, -0.2),
+              frameon=False, ncol=len(handles))
+
+    # (b) Horizontal colorbar (right bottom)
+    cbar_ax = fig.add_axes([0.42, 0.06, 0.44, 0.028])  # [left, bottom, width, height]
+    norm = plt.Normalize(vmin=vmin, vmax=vmax)
+    sm = plt.cm.ScalarMappable(cmap="viridis", norm=norm); sm.set_array([])
+    cbar = fig.colorbar(sm, cax=cbar_ax, orientation="horizontal")
+    cbar.set_label("-log10(FDR)")
+
+    # Save if requested
     if getattr(config, "SAVE_FIGS", False):
         out = config.FIG_DIR / f"dotplot_{axis}_{lib_name}.png"
-        plt.savefig(out, dpi=400, bbox_inches="tight")
+        fig.savefig(out, dpi=400, bbox_inches="tight")
         print(f"[saved] {out}")
+
     plt.show()

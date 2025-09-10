@@ -22,12 +22,14 @@ import numpy as np
 import pandas as pd
 from scipy import stats as spstats
 from statsmodels.stats.multitest import multipletests
+import statsmodels.api as sm
 
 
 __all__ = [
     "spearman_by_group",
     "add_fdr",
     "bootstrap_ci",
+    "summarize_slopes_ols_hc3",
     "fit_slope_ols",
 ]
 
@@ -196,3 +198,48 @@ def fit_slope_ols(
     except Exception:
         slope = float("nan")
     return slope
+
+# --- OLS-HC3 slopes summary by group ---------------------------------
+
+import statsmodels.api as sm
+
+def summarize_slopes_ols_hc3(
+    df: pd.DataFrame,
+    group_col: str = "cell_id",
+    y: str = "core_score",
+    x: str = "log_dose",
+    alpha: float = 0.05,
+) -> pd.DataFrame:
+    """
+    Summarize OLS-HC3 slopes of y ~ log10(dose) per group.
+
+    Parameters
+    ----------
+    df : DataFrame
+        Must contain [group_col, y, x].
+    group_col : str, default "cell_id"
+        Grouping variable (e.g., cell line).
+    y : str, default "core_score"
+        Response variable.
+    x : str, default "log_dose"
+        Predictor variable.
+    alpha : float, default 0.05
+        Confidence level.
+
+    Returns
+    -------
+    DataFrame with columns: ['label','coef','ci_low','ci_high','pvalue'].
+    """
+    rows = []
+    for g, sub in df[[group_col, y, x]].dropna().groupby(group_col):
+        if sub[x].nunique() < 2 or len(sub) < 3:
+            continue
+        X = sm.add_constant(sub[x].astype(float).values)
+        yv = sub[y].astype(float).values
+        model = sm.OLS(yv, X).fit(cov_type="HC3")
+        b = float(model.params[1])
+        ci = model.conf_int(alpha=alpha)
+        lo, hi = map(float, ci[1])
+        p = float(model.pvalues[1])
+        rows.append({"label": str(g), "coef": b, "ci_low": lo, "ci_high": hi, "pvalue": p})
+    return pd.DataFrame(rows)

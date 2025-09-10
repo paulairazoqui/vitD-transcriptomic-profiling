@@ -32,7 +32,9 @@ __all__ = [
     "savefig",
     "forest_from_models",
     "forest_from_summary",
+    "forest_slopes",
     "box_strip",
+    "dotplot_top",
 ]
 
 
@@ -202,7 +204,7 @@ def box_strip(
         If set, performs a simple two-group test using all data in each x-level
         (ignores hue). Prints/annotates p-value when x has exactly 2 levels.
     """
-    box_kwargs = dict(color="white", fliersize=0, linewidth=1.2) | (box_kwargs or {})
+    box_kwargs = dict(palette='dark:white', fliersize=0, linewidth=1.2) | (box_kwargs or {})
     strip_kwargs = dict(size=4, alpha=0.75, jitter=jitter, dodge=dodge) | (strip_kwargs or {})
 
     data = df[[x, y] + ([hue] if hue else [])].dropna()
@@ -211,7 +213,7 @@ def box_strip(
     fig, ax = plt.subplots(figsize=figsize)
 
     sns.boxplot(data=data, x=x, y=y, order=order, hue=hue, dodge=dodge, ax=ax, **box_kwargs)
-    sns.stripplot(data=data, x=x, y=y, order=order, hue=hue, dodge=dodge, ax=ax, **strip_kwargs)
+    sns.stripplot(data=data, x=x, y=y, order=order, hue=hue, ax=ax, **strip_kwargs)
 
     # Avoid double legends if both layers used hue
     if hue:
@@ -258,4 +260,153 @@ def box_strip(
                 sig = "*" if p < alpha else "ns"
                 ax.text(0.5, y_bar*1.03, f"p={p:.3g} ({sig})", ha="center", va="bottom", fontsize=9)
 
+    return ax
+
+# ---------------------------------------------------------------------
+# Convenience wrapper: forest_slopes
+# ---------------------------------------------------------------------
+def forest_slopes(
+    obj,
+    labels: Optional[Sequence[str]] = None,
+    title: Optional[str] = None,
+    sort: str = "coef",
+    **kwargs,
+) -> plt.Axes:
+    """
+    Convenience wrapper to draw forest plots of dose–response slopes.
+
+    Accepts either:
+      1) A summary DataFrame with columns ['label','coef','ci_low','ci_high','pvalue'],
+         typically produced by vitd_utils.dose.summarize_forest(...), OR
+      2) A sequence of fitted models (e.g., OLS-HC3 results) plus 'labels'.
+
+    Parameters
+    ----------
+    obj : pd.DataFrame or Sequence[RegressionResultsWrapper]
+        Summary table or list of models.
+    labels : sequence of str, optional
+        Required only when 'obj' is a list of models.
+    title : str, optional
+        Figure title.
+    sort : {"coef","abs","none"}
+        Sorting for display; passed through.
+    kwargs :
+        Forwarded to underlying forest_* (e.g., figsize, point_size).
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The Axes with the forest plot.
+    """
+    if isinstance(obj, pd.DataFrame):
+        # Summary path
+        return forest_from_summary(
+            obj, title=title, sort=sort, **kwargs
+        )
+    else:
+        # Models path
+        if labels is None:
+            raise ValueError("When passing models, 'labels' must be provided.")
+        return forest_from_models(
+            models=obj, labels=labels, title=title, sort=sort, **kwargs
+        )
+    
+# ---------------------------------------------------------------------
+# Dot plots for enrichment results
+# ---------------------------------------------------------------------
+def dotplot_top(
+    enr_results: dict[str, pd.DataFrame],
+    top_n: int = 15,
+    fdr_cutoff: float = 0.05,
+    groups: Optional[Sequence[str]] = None,
+    wrap_width: int = 60,
+    vmax_cap: float = 3.0,
+    fig_width: float = 12,
+    point_sizes: tuple[int, int] = (20, 120),
+    title: Optional[str] = None,
+) -> plt.Axes:
+    """
+    Dot plot of top enriched pathways across groups (e.g., cell lines).
+
+    Parameters
+    ----------
+    enr_results : dict[str, DataFrame]
+        Mapping {group -> enrichment DataFrame}. Each DataFrame must contain
+        ['term','fdr_bh','ES','set_size'].
+    top_n : int, default 15
+        Number of top pathways to display (after filtering by FDR).
+    fdr_cutoff : float, default 0.05
+        Significance threshold for filtering.
+    groups : list of str, optional
+        Order of groups on x-axis. If None, uses keys from enr_results.
+    wrap_width : int, default 60
+        Wrap pathway labels to this many characters.
+    vmax_cap : float, default 3.0
+        Cap for -log10(FDR) color scale.
+    fig_width : float, default 12
+        Width of the figure.
+    point_sizes : tuple(int,int), default (20,120)
+        Min and max point sizes for set_size.
+    title : str, optional
+        Title for the plot.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+    """
+    import textwrap
+
+    rows = []
+    for g, df in enr_results.items():
+        if df is None or df.empty:
+            continue
+        sub = df[df["fdr_bh"] < fdr_cutoff].copy()
+        if sub.empty:
+            continue
+        sub = sub.nsmallest(top_n, "fdr_bh")  # take best by FDR
+        sub["group"] = g
+        rows.append(sub[["term","ES","fdr_bh","set_size","group"]])
+    if not rows:
+        raise ValueError("No enriched terms passed the cutoff.")
+
+    cat = pd.concat(rows, ignore_index=True)
+
+    # Wrap labels for readability
+    cat["term_plot"] = cat["term"].apply(
+        lambda t: "\n".join(textwrap.wrap(str(t), wrap_width))
+    )
+
+    # Transform values
+    cat["neglogFDR"] = -np.log10(cat["fdr_bh"].clip(lower=1e-300))
+    cat.loc[cat["neglogFDR"] > vmax_cap, "neglogFDR"] = vmax_cap
+
+    if groups is None:
+        groups = list(cat["group"].unique())
+
+    # Figure size scaled to number of terms
+    fig_height = 0.45 * cat["term_plot"].nunique() + 2
+    fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+
+    sns.scatterplot(
+        data=cat,
+        x="group", y="term_plot",
+        hue="neglogFDR", size="set_size",
+        palette="viridis", hue_norm=(0, vmax_cap),
+        sizes=point_sizes,
+        edgecolor="black", linewidth=0.3, ax=ax, legend=False
+    )
+
+    ax.set_xlabel("Group (cell line)")
+    ax.set_ylabel("Top pathways")
+    if title:
+        ax.set_title(title)
+
+    # Colorbar
+    norm = plt.Normalize(0, vmax_cap)
+    sm = plt.cm.ScalarMappable(cmap="viridis", norm=norm)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=ax, orientation="horizontal", pad=0.1, aspect=40)
+    cbar.set_label("-log10(FDR)")
+
+    plt.tight_layout()
     return ax

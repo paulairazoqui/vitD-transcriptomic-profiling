@@ -57,5 +57,5 @@ GSEA_LIBRARIES = {
 # ---------------------------------------------------------------------
 # Output control
 # ---------------------------------------------------------------------
-SAVE_FIGS = False   # change to True to automatically save figures
+SAVE_FIGS = True   # change to True to automatically save figures
 SAVE_TABLES = False # optional: set True to export enrichment tables
