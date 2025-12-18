@@ -1,264 +1,114 @@
 # Vitamin D Transcriptomic Profiling (LINCS L1000)
 
-This repository hosts a **reproducible data-science workflow** to analyze transcriptomic responses to **Vitamin D and its analogs** using the **LINCS L1000** dataset (Connectivity Map / CMap project).  
-The goal is to identify **core gene signatures, dose–response patterns, and pathway enrichments** across multiple human cell lines, using an integrated pipeline of **data engineering, statistical analysis, and visualization**.
+This project presents a **reproducible and well-structured data science pipeline** for analyzing transcriptomic responses to **Vitamin D and its analogs** using the **LINCS L1000 (CMap 2020)** dataset.
+
+The focus of the project is not biological discovery *per se*, but to demonstrate the ability to **handle complex biological datasets**, design **robust data pipelines**, perform **exploratory and directed analyses**, and extract **clear, defensible insights** from high-dimensional gene expression data.
+
+---
+
+## 🎯 Project Goals
+
+- Build an end-to-end workflow for transcriptomic data analysis.
+- Integrate raw public data into a structured relational database.
+- Perform quality control and exploratory analysis on high-dimensional data.
+- Assess consistency and context-dependence of compound-induced signatures.
+- Communicate results clearly through clean visualizations and documentation.
 
 ---
 
 ## 📂 Repository Structure
 
-```
+```yalm 
 vitD-transcriptomic-profiling/
 │
-├── raw_data/         # Manually downloaded LINCS files (metadata + GCTX subset)
-├── backend/          # Django app: database models + populate/export commands
-├── exports/          # Curated project subsets (CSV/Parquet, aligned with DB)
-├── notebooks/        # Jupyter notebooks (EDA, directed analyses, results)
-├── src/vitd_utils/   # Utility library (config, gsea, stats, plotting, etc.)
-├── results/          # Figures and tables for publication
-└── README.md         # Project overview
+├── backend/ # Django app: database models and populate/export commands
+├── data/ # Curated datasets used in analysis
+├── docs/ # Technical documentation and design notes
+├── images/ # Diagrams and static assets
+├── libs/ # Gene sets and auxiliary resources
+├── notebooks/ # Jupyter notebooks (EDA and directed analyses)
+├── results/ # Figures generated during analysis
+├── src/vitd_utils/ # Utility library (stats, plotting, enrichment helpers)
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🔄 Workflow Overview
+## 🔄 Workflow Summary
 
-1. **Raw Data Acquisition**  
-   - Download LINCS2020 metadata and compound expression matrix from [CLUE.io](https://clue.io/data/CMap2020#LINCS2020).  
-   - Keep original filenames (no renaming required).
+1. **Data Acquisition**  
+   Public LINCS L1000 metadata and expression matrices were downloaded from [CLUE.io](https://clue.io/data/CMap2020#LINCS2020)
 
-2. **Database Integration (Django backend)**  
-   - Models: `Compound`, `CellLine`, `Signature`, `Gene`, `ExpressionMatrixEntry`.  
-   - Populate scripts load raw files into a relational SQLite DB.  
-   - Subsets are exported via management commands.
+2. **Database Integration**  
+   A Django + SQLite backend was implemented to organize compounds, cell lines, signatures, and expression data, enabling reproducible access and filtering.
 
-3. **Subset Definition**  
-   - Vitamin D and analogs only.  
-   - Perturbation time fixed at **24 h**.  
-   - Five cell lines: `PC3`, `MCF7`, `A549`, `U2OS`, `HA1E`.  
-   - Exported as aligned metadata + expression matrices (CSV/Parquet).
+3. **Data Subsetting**  
+   The analysis focuses on Vitamin D and related analogs, with:
+   - Fixed perturbation time (24 h)
+   - Five human cell lines: `PC3`, `MCF7`, `A549`, `U2OS`, `HA1E`
 
 4. **Exploratory Data Analysis (EDA)**  
-   - Quality control metrics (TAS, ss_ngene, cc_q75).  
-   - PCA, UMAP, and hierarchical clustering.  
-   - PERMANOVA: variance explained by cell line, compound, and dose.  
-   - Visualization of expression distributions and replicate consistency.
+   - Quality control using LINCS metrics (TAS, ss_ngene, cc_q75)
+   - Dimensionality reduction (PCA, UMAP)
+   - Hierarchical clustering and variance analysis
+   - Assessment of replicate consistency
 
-5. **Directed Analyses**  
-   - **Core VDR signature**: intersection of consistently regulated genes.  
-   - **Dose–response**: monotonicity tests (Spearman ρ), OLS slopes.  
-   - **Pathway enrichment**: GSEA/Enrichr on per-cell UP/DOWN lists.  
-   - **Core score**: single metric summarizing VDR activity.
+5. **Directed Analysis**  
+   Targeted analyses were used to summarize transcriptional patterns and assess:
+   - Consistency across compounds
+   - Cell line–specific responses
+   - Signal robustness across doses
 
-6. **Results & Figures**  
-   - Forest plots, box/strip plots, dot plots (publication-ready).  
-   - Organized in `results/figures`.  
-   - Code modularized in `src/vitd_utils/plotting.py`.
+6. **Visualization & Results**  
+   Results are presented through clear, reproducible figures generated with modular plotting utilities.
 
 ---
 
-## ⚙️ Requirements
+## 📊 Key Analytical Insights
 
-- Python >= 3.11  
-- Recommended: `conda` or `venv`
-
-Main libraries:
-```
-pandas, numpy, matplotlib, seaborn,
-scikit-learn, statsmodels, gseapy,
-django, pyarrow
-```
+- Transcriptional signatures cluster more strongly by **cell line** than by compound, highlighting the importance of cellular context.
+- Vitamin D analogs induce **consistent but heterogeneous** transcriptional responses across different cell types.
+- A subset of compounds shows robust, reproducible signal across multiple quality metrics.
+- Simple summary metrics can effectively capture overall transcriptional activity.
 
 ---
 
-## ▶️ Usage
+## ▶️ How to Run
 
-Clone repository and install dependencies:
+Install dependencies:
 ```bash
-git clone https://github.com/paulairazoqui/vitD-transcriptomic-profiling.git
-cd vitD-transcriptomic-profiling
 pip install -r requirements.txt
 ```
 
-Set up database:
+Set up the database:
 ```bash
 cd backend
 python manage.py migrate
 python manage.py populate_compounds
 python manage.py populate_signatures
-python manage.py export_subset --outdir "../exports"
 ```
 
-Explore analysis:
-```bash
+Explore the analysis:
+``` bash
 jupyter lab notebooks/
 ```
 
----
+## 📚 Additional Documentation
+
+Detailed technical notes, database design decisions, and extended analysis commentary are available in the docs/ directory.
 
 ## 📌 Project Status
-
-- ✅ Database implemented and populated.  
-- ✅ Subset exported and curated.  
-- ✅ EDA completed.  
-- ✅ Utility library (`vitd_utils`) created.  
-- 🚧 Directed analyses and figures in progress.  
-- 🔜 Folder-level READMEs and full documentation.
+✅ Database backend implemented
+✅ Data curated and subset defined
+✅ Exploratory analysis completed
+🚧 Directed analyses and visual refinements ongoing
 
 ---
 
-## 📄 License
+📄 License & Data Source
 
-This project is released under the MIT License.  
-Data comes from the **CLUE LINCS2020 dataset** ([CMap Project](https://clue.io/data/CMap2020#LINCS2020)).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 🧬 Vitamin D Transcriptomic Profiling using LINCS L1000 Data
-
-This project investigates the transcriptional response of human cell lines to Vitamin D and its analogs, using publicly available gene expression profiles from the LINCS L1000 dataset (GSE70138).
-
-The workflow integrates raw L1000 data into a structured relational database (Django + SQLite) to enable reproducible data access and linkage between compounds, cell lines, molecular signatures, and expression matrices.
-
-The objectives are to:
-
-- Characterize the molecular signatures induced by Vitamin D compounds across multiple human cell lines.
-- Identify potential gene expression biomarkers of Vitamin D response.
-- Develop predictive machine learning models to classify or quantify compound effects based on transcriptomic data.
-
-This work combines transparent data processing, rigorous exploratory data analysis (EDA), and predictive modeling, with the aim of generating biologically meaningful insights and serving as the foundation for a scientific preprint or publication.
-
+This project is released under the MIT License.
+Data are derived from the LINCS L1000 / CMap 2020 dataset provided by CLUE.io.
 
 ---
-
-## 🔁 Quick start (reproducibility)
-
-To reproduce the environment:
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/paulairazoqui/vitD-transcriptomic-profiling.git
-cd vitD-transcriptomic-profiling
-
-# 2. Create and activate the virtual environment
-python -m venv vitd_env
-# On Windows (PowerShell)
-.\vitd_env\Scripts\activate
-# On Linux/Mac
-source vitd_env/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-```
-
-> 💡 For detailed setup instructions, including OS-specific notes and troubleshooting, see  
-> [docs/environment_setup.md](docs/environment_setup.md).
-
----
-
-
