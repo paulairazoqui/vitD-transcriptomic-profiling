@@ -1,0 +1,121 @@
+gene_id,selection_freq,sign_consistency,mean_abs_coef,gene_symbol,gene_title
+54541,5,1.0,0.05080242687506907,DDIT4,DNA damage inducible transcript 4
+4792,5,1.0,0.03208668558999155,NFKBIA,NFKB inhibitor alpha
+10112,5,1.0,0.026347285715529568,KIF20A,kinesin family member 20A
+4864,5,1.0,0.023309059504020506,NPC1,NPC intracellular cholesterol transporter 1
+26227,4,1.0,0.02099948679970263,PHGDH,phosphoglycerate dehydrogenase
+51116,5,1.0,0.019837613851911396,MRPS2,mitochondrial ribosomal protein S2
+25932,3,1.0,0.019800758618188762,CLIC4,chloride intracellular channel 4
+9060,4,1.0,0.019673943111056708,PAPSS2,3'-phosphoadenosine 5'-phosphosulfate synthase 2
+2745,5,1.0,0.01850674803558888,GLRX,glutaredoxin
+3280,4,1.0,0.018394669692035293,HES1,hes family bHLH transcription factor 1
+2280,4,1.0,0.018065839159333116,FKBP1A,FKBP prolyl isomerase 1A
+976,4,1.0,0.017657995174723107,ADGRE5,adhesion G protein-coupled receptor E5
+22987,3,1.0,0.015599640661968206,SV2C,synaptic vesicle glycoprotein 2C
+16,4,1.0,0.015473124312236122,AARS,alanyl-tRNA synthetase
+6696,5,1.0,0.015427048721106774,SPP1,secreted phosphoprotein 1
+91949,5,1.0,0.01523784828098071,COG7,component of oligomeric golgi complex 7
+4216,5,1.0,0.014868743213916763,MAP3K4,mitogen-activated protein kinase kinase kinase 4
+178,4,1.0,0.01384660505398121,AGL,"amylo-alpha-1, 6-glucosidase, 4-alpha-glucanotransferase"
+4496,3,1.0,0.0137905002337923,MT1H,metallothionein 1H
+1831,5,1.0,0.013713420146951533,TSC22D3,TSC22 domain family member 3
+23635,5,1.0,0.013631845904841433,SSBP2,single stranded DNA binding protein 2
+2274,3,1.0,0.013604258782223247,FHL2,four and a half LIM domains 2
+6499,5,1.0,0.013196643451903928,SKIV2L,Ski2 like RNA helicase
+6347,4,1.0,0.013050977786561387,CCL2,C-C motif chemokine ligand 2
+54205,5,1.0,0.012827978826381318,CYCS,"cytochrome c, somatic"
+840,4,1.0,0.01265645011194756,CASP7,caspase 7
+10426,3,1.0,0.012596039336983,TUBGCP3,tubulin gamma complex associated protein 3
+80212,5,1.0,0.012007867416435497,CCDC92,coiled-coil domain containing 92
+10227,3,1.0,0.011683239684038713,MFSD10,major facilitator superfamily domain containing 10
+207,4,1.0,0.011542173210041135,AKT1,AKT serine/threonine kinase 1
+79568,4,1.0,0.01127480937296623,MAIP1,matrix AAA peptidase interacting protein 1
+57099,5,1.0,0.011236700767306559,AVEN,apoptosis and caspase activation inhibitor
+875,3,1.0,0.011092865328630878,CBS,cystathionine-beta-synthase
+10628,4,1.0,0.011057008899395055,TXNIP,thioredoxin interacting protein
+5106,5,1.0,0.01078423893273166,PCK2,"phosphoenolpyruvate carboxykinase 2, mitochondrial"
+55107,4,1.0,0.010713637185994267,ANO1,anoctamin 1
+3796,4,1.0,0.010652414410947738,KIF2A,kinesin family member 2A
+10289,3,1.0,0.010649705731559614,EIF1B,eukaryotic translation initiation factor 1B
+9518,4,1.0,0.010458976089922651,GDF15,growth differentiation factor 15
+10240,3,1.0,0.010222850016101244,MRPS31,mitochondrial ribosomal protein S31
+1465,3,1.0,0.010175848486515275,CSRP1,cysteine and glycine rich protein 1
+11274,4,1.0,0.009877720969717337,USP18,ubiquitin specific peptidase 18
+6240,5,1.0,0.00985009672145803,RRM1,ribonucleotide reductase catalytic subunit M1
+1645,4,1.0,0.009700963129933439,AKR1C1,aldo-keto reductase family 1 member C1
+7248,4,1.0,0.009192996580676424,TSC1,TSC complex subunit 1
+10180,4,1.0,0.009091642862914119,RBM6,RNA binding motif protein 6
+4628,3,1.0,0.009058804717180591,MYH10,myosin heavy chain 10
+29984,4,1.0,0.008896810196237923,RHOD,ras homolog family member D
+53822,3,1.0,0.0086530527306234,FXYD7,FXYD domain containing ion transport regulator 7
+5257,3,1.0,0.008647697186568862,PHKB,phosphorylase kinase regulatory subunit beta
+1646,3,1.0,0.008382355440520586,AKR1C2,aldo-keto reductase family 1 member C2
+572,3,1.0,0.008347913497658985,BAD,BCL2 associated agonist of cell death
+26052,3,1.0,0.008204277027950978,DNM3,dynamin 3
+4067,3,1.0,0.00817175397327175,LYN,"LYN proto-oncogene, Src family tyrosine kinase"
+23637,3,1.0,0.007893558208177536,RABGAP1,RAB GTPase activating protein 1
+20,3,1.0,0.007847573739692177,ABCA2,ATP binding cassette subfamily A member 2
+1514,3,1.0,0.007808372204573394,CTSL,cathepsin L
+10188,5,1.0,0.007409617669511042,TNK2,tyrosine kinase non receptor 2
+79080,5,1.0,0.00736627363936852,CCDC86,coiled-coil domain containing 86
+4163,3,1.0,0.0072625727770778735,MCC,MCC regulator of WNT signaling pathway
+3091,3,1.0,0.007178942682259023,HIF1A,hypoxia inducible factor 1 subunit alpha
+22870,3,1.0,0.007062328513043018,PPP6R1,protein phosphatase 6 regulatory subunit 1
+10610,4,1.0,0.007025470524745787,ST6GALNAC2,"ST6 N-acetylgalactosaminide alpha-2,6-sialyltransferase 2"
+4084,3,1.0,0.006977412790399942,MXD1,MAX dimerization protein 1
+10551,5,1.0,0.006908882025643805,AGR2,"anterior gradient 2, protein disulphide isomerase family member"
+998,3,1.0,0.006866562228748101,CDC42,cell division cycle 42
+57149,3,1.0,0.006783058207123698,LYRM1,LYR motif containing 1
+4690,3,1.0,0.006731635812078948,NCK1,NCK adaptor protein 1
+2771,3,1.0,0.006713235988384007,GNAI2,G protein subunit alpha i2
+6788,3,1.0,0.0066871694024312,STK3,serine/threonine kinase 3
+2542,3,1.0,0.006528092195168679,SLC37A4,solute carrier family 37 member 4
+64135,3,1.0,0.0065217492595138525,IFIH1,interferon induced with helicase C domain 1
+7298,4,1.0,0.006478997743625693,TYMS,thymidylate synthetase
+9638,4,1.0,0.006464912371020886,FEZ1,fasciculation and elongation protein zeta 1
+56829,3,1.0,0.006415862359689924,ZC3HAV1,"zinc finger CCCH-type containing, antiviral 1"
+2014,4,1.0,0.00635104846871717,EMP3,epithelial membrane protein 3
+833,3,1.0,0.006343555584361092,CARS,cysteinyl-tRNA synthetase
+3838,3,1.0,0.0060788506011101645,KPNA2,karyopherin subunit alpha 2
+347,3,1.0,0.0060323628944913875,APOD,apolipoprotein D
+10229,3,1.0,0.0059094411806175735,COQ7,"coenzyme Q7, hydroxylase"
+5721,3,1.0,0.005760164838206198,PSME2,proteasome activator subunit 2
+6192,4,1.0,0.0056477162109161445,RPS4Y1,ribosomal protein S4 Y-linked 1
+29102,3,1.0,0.0055939286209307605,DROSHA,drosha ribonuclease III
+3703,4,1.0,0.005554567882368089,STT3A,STT3 oligosaccharyltransferase complex catalytic subunit A
+23753,3,1.0,0.005419463132078114,SDF2L1,stromal cell derived factor 2 like 1
+9673,4,1.0,0.005393535878862475,SLC25A44,solute carrier family 25 member 44
+6468,3,1.0,0.0052807351427897825,FBXW4,F-box and WD repeat domain containing 4
+7172,3,1.0,0.005184635929879177,TPMT,thiopurine S-methyltransferase
+11075,3,1.0,0.0051801157828763435,STMN2,stathmin 2
+5272,3,1.0,0.005163348388440291,SERPINB9,serpin family B member 9
+3732,3,1.0,0.005161378511335495,CD82,CD82 molecule
+51569,3,1.0,0.005022792627618716,UFM1,ubiquitin fold modifier 1
+5993,4,1.0,0.005011581315241982,RFX5,regulatory factor X5
+3693,4,1.0,0.004857288841730563,ITGB5,integrin subunit beta 5
+26256,3,1.0,0.004852605999034057,CABYR,calcium binding tyrosine phosphorylation regulated
+11137,4,1.0,0.004656101782989393,PWP1,"PWP1 homolog, endonuclein"
+6919,3,1.0,0.004629453905909873,TCEA2,transcription elongation factor A2
+79709,4,1.0,0.00461543628532982,COLGALT1,collagen beta(1-O)galactosyltransferase 1
+10900,3,1.0,0.0045437831799619135,RUNDC3A,RUN domain containing 3A
+1978,3,1.0,0.00453140596263793,EIF4EBP1,eukaryotic translation initiation factor 4E binding protein 1
+1556,3,1.0,0.0042902435775773904,CYP2B7P,"cytochrome P450 family 2 subfamily B member 7, pseudogene"
+22841,4,1.0,0.0040761863555945944,RAB11FIP2,RAB11 family interacting protein 2
+23328,4,1.0,0.003984395301812826,SASH1,SAM and SH3 domain containing 1
+51202,3,1.0,0.0038684746096154903,DDX47,DEAD-box helicase 47
+6575,4,1.0,0.003661600584617481,SLC20A2,solute carrier family 20 member 2
+9625,3,1.0,0.003512747968511809,AATK,apoptosis associated tyrosine kinase
+2697,4,1.0,0.003471379841173782,GJA1,gap junction protein alpha 1
+54733,3,1.0,0.0034322027020601046,SLC35F2,solute carrier family 35 member F2
+5293,3,1.0,0.0033452813250008074,PIK3CD,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit delta"
+340591,3,1.0,0.0031038631373352388,CA5BP1,carbonic anhydrase 5B pseudogene 1
+22858,3,1.0,0.003055753848836941,ICK,intestinal cell kinase
+6431,3,1.0,0.0029503935084768096,SRSF6,serine and arginine rich splicing factor 6
+6509,3,1.0,0.002852134240053955,SLC1A4,solute carrier family 1 member 4
+29083,3,1.0,0.00280606548627071,GTPBP8,GTP binding protein 8 (putative)
+4879,5,1.0,0.0027791512529451055,NPPB,natriuretic peptide B
+25793,3,1.0,0.0027619286328390224,FBXO7,F-box protein 7
+55295,3,1.0,0.0024076093392462407,KLHL26,kelch like family member 26
+7504,3,1.0,0.0022343459581664876,XK,X-linked Kx blood group
+3600,3,1.0,0.0016004279717192875,IL15,interleukin 15
+23231,3,1.0,0.0006140446341595529,SEL1L3,SEL1L family member 3
