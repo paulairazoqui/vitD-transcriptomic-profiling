@@ -1,143 +1,193 @@
-# Exploratory Data Analysis of the Vitamin D Transcriptomic Subset
+# EDA 03 — Vitamin D Transcriptomic Subset (LINCS L1000): Integrity Checks + Global Structure
 
-This notebook presents the exploratory data analysis (EDA) of a curated subset of the LINCS L1000 dataset, 
-focusing on transcriptional responses to Vitamin D and its analogs in human cell lines. 
+## Purpose
 
-The subset was generated from the LINCS2020 release and restricted to:
-- **Compounds**: Vitamin D and related analogs (e.g., calcitriol, calcipotriol, paricalcitol, maxacalcitol, ercalcitriol, tacalcitol, seocalcitol).
-- **Cell lines**: Five representative human lines (PC3, MCF7, A549, U2OS, HA1E).
-- **Perturbation time**: 24 hours.
+This notebook validates and characterizes the **curated Vitamin D transcriptomic subset** used throughout the project.  
+The focus here is not “deep biology” yet, but **dataset integrity + global structure**:
 
-The aim of this analysis is to:
-1. Characterize the distribution of signatures across compounds and cell lines.  
-2. Assess the overall structure of the expression matrix.  
-3. Explore transcriptomic similarities via dimensionality reduction and clustering.  
-4. Evaluate signature quality using available metrics.  
-
-These steps provide the foundation for downstream modeling and biological interpretation.
-
-## Data Loading and Initial Setup
-
-We start by loading the exported subset of the LINCS L1000 dataset, focusing on Vitamin D and its analogs.  
-This includes the expression matrix (genes × signatures) and metadata files for signatures, compounds, and cell lines.  
-All files are stored in CSV format, curated from the original LINCS2020 release.
-
-### Sanity Check Results
-
-- **Cell metadata (5×5)**  
-  - One missing value in `growth_pattern` (HA1E).  
-  - No duplicates. → ✔️ clean.  
-
-- **Compound metadata (12×7)**  
-  - All entries in `compound_aliases` are missing (NaN in all 12 rows).  
-  - The rest is complete. → ✔️ usable; this column can be ignored if not needed.  
-
-- **Gene metadata (12,328×7)**  
-  - 51 genes without `ensembl_id`.  
-  - The rest is complete, no duplicates. → ✔️ clean, except for minor missing annotations.  
-
-- **Signature metadata (422×14)**  
-  - No missing values.  
-  - No duplicates. → ✔️ perfect.  
-
-- **Expression matrix (12,328×424)**  
-  - 164 signatures entirely empty (all values NaN).  
-  - Consequently, all 12,328 genes show NaNs in those signatures.  
-  - Conclusion: there are **422 metadata entries for signatures** but **only 258 with actual expression data**.  
-
-
-#### **Decision Taken**
-
-- Remove the 164 empty signatures from the expression matrix, keeping the 258 valid ones.  
-- Align `sig_meta` to retain only the corresponding 258 signatures.  
-- Keep all other metadata tables (cell, compound, gene) unchanged.  
-
-## Signature Distribution by Compound and Cell Line — setup
-
-We quantify how many signatures are available per compound and per cell line to detect potential imbalance that could bias downstream analyses.
-
-#### Conclusion
-
-The distribution of signatures is uneven across compounds and cell lines.  
-**Calcitriol** is the most represented compound (115 signatures), followed by **maxacalcitol** (60) and several analogs with ~57 signatures. **Calcipotriol** is the least represented (31).  
-
-Across cell lines, **MCF7** and **A549** show the highest coverage (>100 signatures each), while **U2OS** is markedly underrepresented (21 signatures).  
-This imbalance should be considered in downstream analyses to avoid biases in compound- or cell line–specific conclusions.
+1. Verify that all exported tables are consistent and usable (sanity checks).
+2. Confirm that the expression matrix behaves as expected for Level 5 moderated *z*-scores.
+3. Quantify representation across **compounds** and **cell lines** (imbalance matters).
+4. Explore global similarity among signatures via **PCA** and summarize variance structure.
+5. Export a clean, aligned dataset for downstream analyses (models + hypothesis-driven biology).
 
 ---
 
-## Global Distribution of Expression Values
+## Dataset Definition (what this notebook assumes)
 
-To evaluate the overall structure of the dataset, we inspect the distribution of moderated `z-scores` across all genes and signatures.  
-This step helps to:  
-- Assess the expected centering around zero.  
-- Verify the range and spread of values.  
-- Identify potential outliers that may influence downstream analyses.
+This notebook operates on a subset restricted to:
 
-#### Conclusion
+- **Compounds (7):** calcitriol, calcipotriol, paricalcitol, maxacalcitol, ercalcitriol, tacalcitol, seocalcitol  
+- **Cell lines (5):** PC3, MCF7, A549, U2OS, HA1E  
+- **Perturbation time:** 24 hours  
+- **Expression layer:** LINCS Level 5 (moderated z-scores)
 
-The global distribution of expression values is tightly centered around zero, with most `z-scores` within the expected range of ±3.  
-Both histogram and boxplot highlight a small proportion of extreme values, which are typical for high-dimensional transcriptomic data and do not indicate systematic anomalies.
+---
+
+## Working Hypothesis (starting point)
+
+Even within a “same pathway” perturbation family (Vitamin D analogs), **cellular context will explain more of the global transcriptional structure than compound identity**.
+
+Concretely, we expect:
+- Signatures to show **stronger grouping by cell line** than by analog in low-dimensional embeddings (PCA/UMAP).
+- Compounds to look **partially overlapping** globally (shared Vitamin D program), with differences emerging more clearly **within** a cell line and/or across dose ranges.
+- Quality and strength metrics (e.g., signal intensity proxies) to vary by cell line, influencing separability.
+
+This hypothesis informs the next steps: stratified analyses by cell line, dose-aware contrasts, and models that include cell identity as a primary driver.
+
+---
+
+## Data Loading and Sanity Checks
+
+We load:
+- `sig_meta` (signature-level metadata)
+- `exp_df` (gene expression matrix: genes × signatures)
+- supporting metadata tables (cells, compounds, genes)
+
+### Key sanity check results
+
+- **Cell metadata**
+  - Minor missing annotation(s) only (e.g., growth pattern).
+  - No duplicates → usable as-is.
+
+- **Compound metadata**
+  - Some annotation columns may be entirely missing (e.g., aliases).
+  - Core identifiers are complete → keep, ignore empty columns if not needed.
+
+- **Gene metadata**
+  - Small fraction of genes missing external identifiers (e.g., Ensembl).
+  - No duplicates → acceptable for transcriptomics workflows.
+
+- **Signature metadata**
+  - Complete and duplicate-free → ideal.
+
+- **Expression matrix consistency issue**
+  - The exported expression matrix contains a subset of signatures with **all values missing (all-NaN columns)**.
+  - Outcome: **signature metadata exists for more signatures than the expression matrix actually contains with signal**.
+
+### Decision taken (critical cleaning step)
+
+To prevent silent downstream errors (misalignment, biased summaries, broken models):
+
+1. **Remove empty signatures** (all-NaN columns) from the expression matrix.
+2. **Filter and re-align `sig_meta`** to keep only signatures that truly exist in the cleaned expression matrix.
+3. Keep other metadata tables unchanged (they remain valid reference maps).
+
+**Result:** a final set of **258 valid signatures** with expression data, consistently aligned with metadata.
+
+---
+
+## Signature Coverage and Imbalance (Compound + Cell Line)
+
+Before interpreting any clustering or “strong responders”, we quantify how many signatures exist per factor.
+
+### By compound (n signatures)
+- **calcitriol:** 115  
+- **maxacalcitol:** 60  
+- **ercalcitriol:** 57  
+- **tacalcitol:** 57  
+- **seocalcitol:** 57  
+- **paricalcitol:** 45  
+- **calcipotriol:** 31  
+
+**Interpretation**
+- The dataset is **compound-imbalanced**, dominated by calcitriol.
+- Any compound-level conclusion should either:
+  - use stratified comparisons, or
+  - apply weighting / resampling strategies, or
+  - report uncertainty driven by unequal sample sizes.
+
+### By cell line (n signatures)
+- **MCF7:** 116  
+- **A549:** 104  
+- **HA1E:** 92  
+- **PC3:** 89  
+- **U2OS:** 21  
+
+**Interpretation**
+- U2OS is **strongly underrepresented**, which can reduce power and inflate variance in that subgroup.
+- This reinforces the need for **cell-aware** analyses (the hypothesis already expects cell line to dominate structure).
+
+---
+
+## Global Distribution of Expression Values (Level 5 z-scores)
+
+We inspect the global distribution across all genes and signatures to confirm:
+- values are centered near zero,
+- the range is plausible for moderated z-scores,
+- extreme values exist but do not indicate systematic corruption.
+
+### Outcome
+- Expression values are **tightly centered around 0**.
+- Most values fall within an expected range, with a small tail of extremes typical in high-dimensional perturbational expression data.
+- No evidence of systematic drift or scaling artifacts.
 
 ---
 
 ## Validation of Perturbation Time and Dose
 
-Although the subset was filtered to 24 hours, we verify the consistency of perturbation times directly from the metadata.  
-We also inspect the distribution of applied doses across compounds, as variations in concentration may contribute to heterogeneity in transcriptional responses.
+Even if the subset was pre-filtered, this notebook verifies **metadata consistency**:
 
-#### Conclusion
+- **Perturbation time:** confirm all signatures are 24h (no leakage).
+- **Dose:** quantify dose ranges and variability across compounds.
 
-All perturbation times are consistently set to 24h, confirming the filtering criteria.  
-Dose distributions span several orders of magnitude (from ~0.01 µM to 10 µM), with some compounds showing broader coverage (e.g., calcitriol, calcipotriol) while others are more restricted.  
-This heterogeneity in dosing conditions may contribute to variability in transcriptional responses and should be taken into account in downstream analyses.
+### Outcome
+- 24h exposure is consistent across the cleaned set.
+- Dose spans multiple orders of magnitude (e.g., ~0.01 µM to 10 µM).
+- Dose heterogeneity is a plausible driver of within-compound variability and should be handled explicitly later.
 
 ---
 
-## Principal Component Analysis (PCA)
+## PCA — Global Similarity Structure
 
-To explore global similarities among signatures, we apply `Principal Component Analysis` (`PCA`) on the expression matrix.  
-This method reduces the dimensionality of the dataset while retaining as much variance as possible, allowing us to visualize whether signatures cluster by compound or cell line.
+We run PCA on the cleaned expression matrix to:
+- visualize global clustering tendencies,
+- detect outliers,
+- test whether **cell line separation** emerges more strongly than compound separation (hypothesis check).
 
-#### Conclusion
+### Key result (PCA1/PCA2)
+- PC1 explains **~13.6%**
+- PC2 explains **~5.4%**
 
-The PCA projection of the 258 valid signatures shows that the first two components explain **13.6%** and **5.4%** of the total variance, respectively.  
-No strong global separation is observed among `compounds`, suggesting largely overlapping transcriptional profiles across Vitamin D analogs.  
-When colored by `cell line`, mild clustering tendencies appear, particularly for one lineage, indicating that **cellular context contributes more strongly to variance structure than compound identity**.  
-These results are consistent with the high-dimensional nature of transcriptomic data, where many components are needed to capture the full complexity of variation.
+### Interpretation
+- **No strong global separation by compound** in the first two PCs (expected if a shared Vitamin D program dominates).
+- **Clearer structure by cell line** than by compound: cell context contributes more to global variance than analog identity in low-dimensional space.
+- Low variance per PC is typical: transcriptomic variance is distributed across many axes.
 
-## Scree Plot: Explained Variance of Principal Components
+---
 
-To evaluate how much variance is captured by each principal component (PC), we generated a scree plot.  
-This allows us to determine how many PCs contribute meaningfully to the variance structure of the dataset, guiding dimensionality reduction choices.
+## Scree Plot + Variance Thresholds (how many PCs matter?)
 
-**Decision taken:**  
-The explained variance drops quickly after the first components, confirming that only a limited number of PCs capture a substantial fraction of the variation. For subsequent analyses, we will retain the first components up to the "elbow point" of the scree plot.
+We quantify how many PCs are needed to capture common variance thresholds:
 
-### Conclusion — Scree Plot
+- **~27 PCs → 50% variance**
+- **~62 PCs → 70% variance**
+- **~91 PCs → 80% variance**
+- **~138 PCs → 90% variance**
+- **~177 PCs → 95% variance**
 
-The scree plot shows a steep drop in explained variance after the first few components, followed by a long tail.  
-This indicates that only a limited number of principal components capture a substantial share of the total variance, while many additional components contribute marginally.
+### Interpretation
+- This is a classic high-dimensional regime: **no single dominant axis**.
+- For downstream work, the first ~50–100 PCs are a reasonable compromise for:
+  - association tests (e.g., ANOVA across metadata),
+  - batch/structure diagnostics,
+  - building compact representations for models.
+- Biology-focused contrasts (dose-response, compound ranking within cell line, pathway analysis) should be done as targeted analyses rather than “just PCA”.
 
-Based on variance thresholds (see code output below), we will retain up to the elbow/threshold identified for downstream summaries, and move targeted analyses (e.g., dose comparison, ANOVA on PCs, enrichment) to a separate notebook.
+---
 
-### PCA Variance Explained
+## Outputs (for reproducibility)
 
-The PCA variance analysis indicates that:
+We export cleaned, aligned artifacts:
 
-- ~27 PCs are required to capture **50%** of the variance.  
-- ~62 PCs are required to capture **70%** of the variance.  
-- ~91 PCs are required to capture **80%** of the variance.  
-- ~138 PCs are required to capture **90%** of the variance.  
-- ~177 PCs are required to capture **95%** of the variance.  
+- **Expression matrix (`exp_clean`) → Parquet**
+  - preserves gene index efficiently
+  - faster I/O for downstream notebooks and modeling
 
-This distribution confirms the high-dimensional nature of transcriptomic data, where variance is spread across many axes. While no single component dominates, the first ~50–100 PCs already summarize a large portion of the signal and are suitable for downstream association tests (e.g., ANOVA with metadata, dose-response contrasts).
+- **Signature metadata (`sig_meta_clean`) → CSV**
+  - `sig_id` remains the primary key
+  - keeps metadata portable and easy to inspect
 
-### Closing & Export of Cleaned Data
+These exported files are treated as the **single source of truth** for the remainder of the project.
 
-We export the cleaned datasets in two complementary formats:
-
-- **Expression matrix (`exp_clean`)**: saved as **Parquet** to preserve the gene index efficiently and enable fast I/O in downstream analyses.  
-- **Signature metadata (`sig_meta_clean`)**: saved as **CSV**, keeping only the data columns (without index), since `sig_id` is the primary key.  
-
-This ensures reproducibility and consistency when reloading the data in subsequent notebooks.
+---
