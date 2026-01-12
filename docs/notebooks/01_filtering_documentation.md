@@ -1,50 +1,55 @@
-# EDA 01 – Dataset Filtering and Subset Definition
+# EDA 01 — Dataset Filtering and Subset Definition
 
-## Purpose
+## Objective
 
-The goal of this step was to define a **clean, consistent, and biologically
-meaningful subset** of the LINCS L1000 dataset focused on Vitamin D and related
-analogs, suitable for downstream exploratory and comparative analyses.
+The objective of this step is to define a **clean, consistent, and biologically meaningful subset** of the LINCS L1000 dataset focused on **Vitamin D and related analogs**, suitable for downstream exploratory, comparative, and modeling analyses.
 
-Given the heterogeneity of LINCS experiments, this step prioritizes:
-- data coverage
-- experimental consistency
-- interpretability over maximal size
+Given the intrinsic heterogeneity of LINCS experiments, this stage prioritizes:
+
+- experimental consistency  
+- biological interpretability  
+- sufficient data coverage  
+
+over maximizing raw dataset size.
+
+This filtering step establishes a robust foundation for all subsequent analyses in the project.
 
 ---
 
 ## Data Sources
 
-The following LINCS metadata files were used:
+The following LINCS metadata and expression files were used:
 
-- `compoundinfo_beta.txt` – compound identifiers and annotations
-- `instinfo_beta.txt` – experimental conditions (dose, time, cell line)
-- `siginfo_beta.txt` – transcriptomic signature metadata
-- `level5_beta_trt_cp_n720216x12328` – Level 5 z-score matrix (`.gctx`)
+- `compoundinfo_beta.txt` — compound identifiers and annotations  
+- `instinfo_beta.txt` — experimental conditions (dose, time, cell line)  
+- `siginfo_beta.txt` — transcriptomic signature metadata  
+- `level5_beta_trt_cp_n720216x12328.gctx` — Level 5 gene expression matrix (z-scores)
 
 ---
 
 ## Identification of Vitamin D–Related Compounds
 
-A broad keyword-based search was performed across all compound metadata fields to capture Vitamin D and closely related analogs (e.g. *calcitriol*, *calcipotriol*, *paricalcitol*).
+To capture Vitamin D and closely related analogs, a **broad keyword-based search** was performed across all compound metadata fields. This approach aimed to minimize false negatives caused by naming variability or incomplete annotations.
 
-After extracting the corresponding `pert_id` values, we filtered the experimental conditions (`instinfo_beta.txt`) and summarize:
+Examples of captured compounds include:
 
-- The most frequent compounds
-- The most represented cell lines
-- The most common exposure times
+- Calcitriol  
+- Calcipotriol  
+- Paricalcitol  
+- Ercalcitriol  
+- Tacalcitol  
 
-This sets the foundation for selecting a biologically meaningful and well-supported subset for transcriptomic analysis.
+All matching `pert_id` values were extracted and used to filter the experimental conditions in `instinfo_beta.txt`.
 
-This inclusive strategy was chosen to avoid missing relevant perturbagens due to naming or annotation variability.
+This inclusive strategy was intentionally chosen to preserve biological relevance while avoiding overly restrictive compound selection at this early stage.
 
-From the full dataset, **5,919 experimental conditions** involving Vitamin D–related compounds were identified.
+From the full LINCS dataset, **5,919 experimental conditions** involving Vitamin D–related perturbagens were identified.
 
 ---
 
-## Exploratory Summary of Experimental Coverage
+## Exploratory Assessment of Experimental Coverage
 
-The filtered experimental conditions were summarized to assess coverage across:
+The filtered experimental conditions were summarized to evaluate coverage across key dimensions:
 
 - **Compounds**
 - **Cell lines**
@@ -52,55 +57,57 @@ The filtered experimental conditions were summarized to assess coverage across:
 
 Key observations:
 
-- Seven compounds dominate the dataset:
-  *Calcitriol, Calcipotriol, Maxacalcitol, Seocalcitol, Ercalcitriol,
-  Tacalcitol, Paricalcitol*.
-- **24-hour exposure** is by far the most frequent condition
-  (≈ 74% of experiments).
-- Five cell lines show robust representation:
-  `MCF7`, `A549`, `PC3`, `HA1E`, `U2OS`.
+- Seven compounds dominate the dataset:  
+  *Calcitriol, Calcipotriol, Maxacalcitol, Seocalcitol, Ercalcitriol, Tacalcitol, Paricalcitol*
+- **24-hour exposure** represents approximately **74%** of all experiments.
+- Five cell lines show strong and consistent representation:  
+  `MCF7`, `A549`, `PC3`, `HA1E`, `U2OS`
 
-This combination provides a balance between biological diversity and statistical
-robustness.
+This distribution provides a favorable balance between biological diversity and statistical robustness.
 
 ---
 
-## Subset Design Decisions
+## Subset Design Rationale
 
-Based on coverage and consistency, the final subset was defined as:
+Based on coverage, consistency, and interpretability, the final subset was defined using the following criteria:
 
 - **7 compounds**
 - **5 cell lines**
-- **24 h exposure time**
+- **24-hour exposure time**
 
-Coverage across compound–cell line combinations was inspected prior to final
-selection.
+Coverage across compound–cell line combinations was explicitly inspected prior to final selection.
 
-Two combinations were missing:
-- Maxacalcitol – U2OS
-- Paricalcitol – U2OS
+Two combinations were absent:
 
-These gaps were considered acceptable, as:
-- U2OS is well represented for other compounds
-- Slight imbalance is expected in real-world high-throughput datasets
-- Removing U2OS would reduce biological diversity without improving coverage
-substantially
+- Maxacalcitol – U2OS  
+- Paricalcitol – U2OS  
+
+These gaps were considered acceptable because:
+
+- U2OS is well represented for other compounds  
+- Minor imbalance is expected in high-throughput datasets  
+- Removing U2OS would reduce biological diversity without substantially improving coverage
 
 Final design:
-**7 compounds × 5 cell lines × 24 h (minus 2 missing combinations)**
+
+**7 compounds × 5 cell lines × 24 h exposure (minus 2 missing combinations)**
 
 ---
 
 ## Quality Control Criteria
-- To ensure data quality, we filtered the 422 matched signatures to retain only those with **at least 3 biological replicates** (`nsample ≥ 3`).
+
+To ensure transcriptomic robustness, the matched signatures were filtered to retain only those with:
+
+- **At least 3 biological replicates** (`nsample ≥ 3`)
+
+After applying this criterion, **422 candidate signatures** were reduced to a high-quality subset.
 
 ---
 
 ## Outcome
 
-- **258 high-quality transcriptomic signatures** selected
-- Expression matrix extracted from Level 5 data
-- Dataset saved for downstream EDA and directed analyses
+- **258 high-quality transcriptomic signatures** selected  
+- Expression data extracted from Level 5 z-score matrix  
+- Final dataset saved for downstream exploratory analysis and targeted modeling
 
-This filtered subset serves as the foundation for all subsequent analyses in
-the project.
+This curated subset constitutes the reference dataset for all subsequent analyses in the project.
