@@ -1,0 +1,6 @@
+cluster,n_signatures,n_compounds,n_cell_lines,mean_tas,mean_cc_q75,top_compounds,top_cell_lines
+1,101,7,5,0.16403366376237621,0.2055821782178218,calcitriol (32); calcipotriol (15); tacalcitol (14),MCF7 (32); A549 (27); HA1E (24)
+3,74,7,5,0.16095203783783782,0.2252364864864865,calcitriol (31); maxacalcitol (11); ercalcitriol (8),MCF7 (32); HA1E (20); A549 (18)
+2,31,6,5,0.21954578709677422,0.24431935483870967,calcitriol (9); maxacalcitol (9); ercalcitriol (5),A549 (11); HA1E (10); MCF7 (6)
+0,27,7,1,0.32180585185185184,0.4375777777777778,calcitriol (7); seocalcitol (5); tacalcitol (5),PC3 (27)
+4,25,6,1,0.33368744,0.43012,calcitriol (12); paricalcitol (4); calcipotriol (3),PC3 (25)
