@@ -181,7 +181,7 @@ def box_strip(
     show_n: bool = True,
     test: Optional[str] = None,  # "ttest" | "mannwhitney" | None
     alpha: float = 0.05,
-    figsize: tuple = (6.5, 4.5),
+    figsize: tuple = (6.5, 3.5),
     jitter: float = 0.25,
     dodge: bool = True,
     box_kwargs: Optional[dict] = None,

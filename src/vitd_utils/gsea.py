@@ -703,8 +703,10 @@ def dotplot_top(
 
     # Save if requested
     if getattr(config, "SAVE_FIGS", False):
-        out = config.FIG_DIR / f"dotplot_{axis}_{lib_name}.png"
-        fig.savefig(out, dpi=400, bbox_inches="tight")
-        print(f"[saved] {out}")
-
+        out_png = config.FIG_DIR / f"dotplot_{axis}_{lib_name}.png"
+        out_svg = config.FIG_DIR / f"dotplot_{axis}_{lib_name}.svg"
+        fig.savefig(out_png, dpi=400, bbox_inches="tight")
+        fig.savefig(out_svg, bbox_inches="tight")
+        print(f"[saved] {out_png}")
+        print(f"[saved] {out_svg}")
     plt.show()
