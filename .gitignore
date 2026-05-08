@@ -63,3 +63,8 @@ data/exports/functional_context/stable_gene_symbols_for_enrichment.csv
 
 libs/h.all.v2025.1.Hs.symbols.gmt
 libs/c2.cp.reactome.v2025.1.Hs.symbols.gmt
+
+
+
+enrichment/gencode.v44.basic.annotation.gtf
+enrichment/remap2022_VDR_nr_macs2_hg38_v1_0.bed
