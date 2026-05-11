@@ -66,5 +66,3 @@ The transcriptomic perturbation data are from **LINCS L1000**. The curated manus
 If you use this repository, please cite the submitted manuscript:
 
 > Gene-level variability, pathway-level convergence: a systems view of vitamin D signaling.
-
-A final citation will be added when publication details are available.
