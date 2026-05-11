@@ -1,171 +1,70 @@
-# Vitamin D Transcriptomic Profiling  
-**A Data-Driven Analysis of Vitamin D–Induced Transcriptional Programs**
+# Gene-level variability, pathway-level convergence: a systems view of vitamin D signaling
 
-**Author:** Paula — Data Scientist / Computational Biology  
-**Focus:** Transcriptomics · Bioinformatics · Data Science applied to biology
+This repository is a vitamin D transcriptomics research repository centered on the submitted manuscript **"Gene-level variability, pathway-level convergence: a systems view of vitamin D signaling"**. It contains the manuscript-associated analysis track together with exploratory notebooks, supporting analyses, dashboard-related utilities, and development materials that document the broader research workflow.
 
----
+The manuscript analyzes vitamin D-related perturbational transcriptomic signatures from **LINCS L1000**. The validated manuscript scope includes **258 perturbational signatures**, **5 human cell lines** (**A549, HA1E, MCF7, PC3, U2OS**), **7 vitamin D-related compounds**, and **24-hour perturbations**. Analyses focus on gene-level variability, Hallmark pathway enrichment, a consensus transcriptional core, the `core_score` metric, dose-response analysis, and VDR-axis analysis.
 
-## Project Overview
+## Repository structure
 
-This project explores the **transcriptional response to Vitamin D and related analogs** using publicly available data from the **LINCS L1000** consortium.  
-The goal is to combine **biological reasoning** with **rigorous data science workflows** to characterize global and context-specific patterns of gene expression modulation.
+```text
+.
+├── README.md                  # Repository overview and reproducibility guide
+├── docs/                      # Manuscript context and supporting documentation
+├── notebooks/                 # Analysis notebooks used for data processing, analysis, and figure generation
+├── src/vitd_utils/            # Shared analysis utilities and configuration
+├── data/                      # Raw, processed, exported, and dashboard-ready data files
+├── results/                   # Generated tables, enrichment outputs, and figures
+├── enrichment/                # External enrichment-related input files and supporting analysis
+├── images/                    # Repository-level images and schematic files
+├── backend/                   # Dashboard/database support code
+├── libs/                      # Local library notes
+└── requirements.txt           # Python dependencies
+```
 
-Rather than treating this as a purely predictive task, the project emphasizes:
+## Analysis organization
 
-- Careful dataset curation  
-- Transparent exploratory analysis  
-- Hypothesis-driven modeling  
-- Statistical interpretability  
-- Reproducibility and methodological clarity  
+The repository separates the central manuscript-associated track from broader exploratory and development work.
 
-The repository is structured as a **complete analytical pipeline**, moving from raw data filtering to statistical inference and biological interpretation.
+### Manuscript-associated analysis track
 
-![abstract](images/abstract.jpg)
+The primary manuscript analyses are organized as notebooks in `notebooks/`:
 
----
+1. `01_filtering.ipynb` — LINCS L1000 subset definition and filtering.
+2. `02_EDA.ipynb` and `03_EDA_subset.ipynb` — exploratory analyses of the full and curated subsets.
+3. `04_directed_results.ipynb` — directed manuscript analyses, including the consensus transcriptional core, `core_score`, dose-response analysis, and Hallmark pathway enrichment.
+4. `06_functional_context.ipynb` — functional context for enrichment results.
+5. `07_statistical_modeling_core_score.ipynb` — statistical modeling of the `core_score` metric.
 
-## Scientific Motivation
+Generated manuscript-associated outputs are organized under `results/`, with figures in `results/figures/`, enrichment outputs in `results/enrichment/`, and tabular outputs in `results/dfs/`.
 
-Vitamin D plays a well-established role in transcriptional regulation, impacting processes such as proliferation, differentiation, metabolism, and stress responses.  
-However, its **context-dependent effects**—across different cell types, doses, and analogs—remain complex and heterogeneous.
+### Exploratory, development, and supporting materials
 
-High-throughput perturbational datasets like LINCS L1000 provide an opportunity to:
+Additional notebooks and files document exploratory analyses, supporting checks, analysis variants, dashboard-ready data, and database/dashboard infrastructure. These materials are part of the broader research workflow and should be interpreted according to their local notebook context rather than as additional manuscript claims.
 
-- Quantify shared vs. context-specific transcriptional programs  
-- Assess dose–response behavior at the transcriptomic level  
-- Identify conserved biological pathways modulated by Vitamin D  
+## Reproducibility
 
-This project uses these data to address such questions in a structured, data-driven manner.
+The repository is intended to support transparent inspection and rerunning of the manuscript-associated analyses while preserving the broader exploratory and development record.
 
----
+Basic setup:
 
-## Core Hypotheses
+```bash
+git clone <repository-url>
+cd vitD-transcriptomic-profiling
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-The analyses in this repository are guided by the following explicit hypotheses:
+To reproduce the manuscript-associated track, run the relevant notebooks from `notebooks/` in numerical order, starting with `01_filtering.ipynb`. Shared paths and configuration are defined in `src/vitd_utils/`, and analysis outputs are written to the organized `data/` and `results/` subdirectories. Exploratory notebooks, dashboard utilities, and supporting materials can be rerun or inspected independently where their dependencies and local context apply.
 
-1. **Cellular context explains more transcriptomic variability than compound identity** within the Vitamin D perturbation family.
-2. A **consensus core transcriptional signature** of Vitamin D activity can be identified across cell lines.
-3. Activation of this core signature exhibits **dose-dependent and monotonic behavior** in most cellular contexts.
-4. Vitamin D analogs induce both **conserved transcriptional programs** and **context-specific biological responses**.
+## Data source
 
-These hypotheses are tested progressively throughout the pipeline.
+The transcriptomic perturbation data are from **LINCS L1000**. The curated manuscript dataset contains **258 perturbational signatures** from **A549, HA1E, MCF7, PC3, and U2OS** cells treated for **24 hours** with **7 vitamin D-related compounds**.
 
----
+## Citation
 
-## Dataset and Scope
+If you use this repository, please cite the submitted manuscript:
 
-- **Source:** LINCS L1000 (LINCS2020 release)
-- **Compounds:** Vitamin D and related analogs (e.g., calcitriol, calcipotriol, paricalcitol, tacalcitol, seocalcitol)
-- **Cell lines:** PC3, MCF7, A549, U2OS, HA1E
-- **Exposure time:** 24 hours
-- **Final dataset:** 258 high-quality transcriptional signatures  
-- **Gene space:** 12,328 genes (z-score normalized, Level 5)
+> Gene-level variability, pathway-level convergence: a systems view of vitamin D signaling.
 
-The dataset is intentionally curated to balance **biological relevance**, **experimental consistency**, and **statistical robustness**.
-
----
-
-## Analytical Pipeline
-
-The project is organized as a sequence of notebooks, each addressing a specific analytical stage.
-
-### 1. Dataset Filtering and Subset Definition
-**Notebook:** `01_filtering`  
-Identification and curation of a biologically meaningful Vitamin D subset from the full LINCS dataset, with explicit quality-control criteria.
-
----
-
-### 2. Exploratory Data Analysis
-**Notebooks:**  
-- `02_EDA`  
-- `03_EDA_subset`
-
-Initial exploration of metadata, expression distributions, dimensionality reduction (PCA, UMAP), clustering, and quality metrics to assess structure, variability, and experimental coverage.
-
----
-
-### 3. Directed (Hypothesis-Driven) Analyses
-**Notebook:** `04_directed_results`
-
-Definition of a **consensus Vitamin D core gene signature**, dose–response analysis using multiple complementary approaches (Spearman, OLS-HC3, bootstrap), and pathway enrichment (GSEA, Reactome, Hallmark).
-
----
-
-### 4. Global Machine Learning Baseline
-**Notebook:** `05_ml_baseline_global`
-
-Implementation of an **Elastic Net regression baseline** to quantify global predictive signal, establish a lower-bound benchmark, and assess whether linear structure captures meaningful variance.
-
----
-
-### 5. Functional Context and Biological Interpretation
-**Notebook:** `06_functional_context`
-
-Synthesis of enrichment results into higher-level functional themes, distinguishing conserved transcriptional programs from context-specific responses.
-
----
-
-### 6. Statistical Modeling of Core Response
-**Notebook:** `07_statistical_modeling_core_score`
-
-Formal statistical modeling of the Vitamin D core score as a response variable, focusing on effect sizes, hypothesis testing, robust inference, and contextual interpretation.
-
----
-
-## Key Findings (High-Level)
-
-Across the full pipeline, the analyses consistently show that:
-
-- A **robust Vitamin D core transcriptional signature** can be defined across multiple cell lines.
-- This core response exhibits **dose-dependent activation** in most contexts.
-- **Cell line identity** contributes more strongly to transcriptomic variability than compound identity.
-- Pathway enrichment reveals a mix of:
-  - conserved programs (cell cycle, metabolism, stress response)
-  - context-specific processes (DNA repair, chromatin remodeling, immune signaling)
-
-These results are internally consistent across exploratory, statistical, and modeling approaches.
-
----
-
-## What This Project Is *Not*
-
-To avoid overinterpretation, it is important to clarify that this project does **not**:
-
-- Claim causal mechanisms or therapeutic conclusions  
-- Replace controlled experimental validation  
-- Optimize models purely for predictive performance  
-- Attempt exhaustive biological annotation of all signals  
-
-Its purpose is **analytical characterization and hypothesis evaluation**, not clinical inference.
-
----
-
-## Reproducibility and Design Principles
-
-- Deterministic pipelines with fixed random seeds  
-- Centralized configuration (`vitd_utils.config`)  
-- No manual data manipulation outside documented steps  
-- Clear separation between EDA, modeling, and interpretation  
-
-All results can be regenerated end-to-end from the documented pipeline.
-
----
-
-## Project Status
-
-**Status:** Complete (v1)
-
-The core analytical pipeline is complete and self-contained.  
-Possible extensions include non-linear modeling, hierarchical/mixed-effects approaches, or integration with additional perturbation datasets.
-
----
-
-## Final Notes
-
-This repository is designed as both:
-
-- a **technical portfolio project** demonstrating applied data science and bioinformatics skills, and  
-- a **biologically grounded analytical study** built on real-world transcriptomic data.
-
-Feedback, discussion, and extensions are welcome.
+A final citation will be added when publication details are available.
