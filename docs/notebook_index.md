@@ -1,0 +1,23 @@
+# Notebook index
+
+This repository keeps the manuscript-associated analysis workflow alongside broader exploratory, validation, and support notebooks. The main manuscript track is organized around the numbered notebooks in `notebooks/`: dataset definition (`01`), exploratory quality/structure checks (`02`–`03`), directed result generation (`04`), functional interpretation (`06`), and statistical modeling (`07`). Additional notebooks are retained to document sensitivity checks, validation steps, dashboard/database support, or exploratory development work; they are not all required to reproduce the manuscript-associated results.
+
+## Notebook classification
+
+| notebook | category | purpose | manuscript-associated? | primary outputs/results |
+|---|---|---|---|---|
+| `notebooks/01_filtering.ipynb` | manuscript-associated | Defines the curated LINCS vitamin D subset and exports filtered metadata/expression inputs for downstream analysis. | yes | Processed signature metadata, selected signature IDs, and vitamin D expression matrix under `data/processed_data/`. |
+| `notebooks/02_EDA.ipynb` | manuscript-associated | Explores annotation structure, expression patterns, recurrence, and candidate response summaries in the vitamin D signature set. | yes | Exploratory figures for manuscript/supplementary use plus dashboard summary exports under `data/dashboard/`. |
+| `notebooks/03_EDA_subset.ipynb` | manuscript-associated | Cleans/aligns the curated subset, checks coverage and global structure, and creates the clean analysis-ready exports. | yes | PCA/scree figures, PERMANOVA support tables, `data/exports/expression_matrix_clean.parquet`, and `data/exports/signature_metadata_clean.csv`. |
+| `notebooks/04_directed_results.ipynb` | manuscript-associated | Runs the primary directed analyses: consensus core definition, `core_score`, dose-response summaries, pathway enrichment, and manuscript figure generation. | yes | Core gene/score files, dose-response tables, enrichment/preranked outputs, and manuscript figures under `results/`. |
+| `notebooks/04_directed_results_plus3.ipynb` | sensitivity/variant analysis | Variant of the directed-results workflow retained to compare alternative directed-analysis settings. | supporting | Alternative core/dose-response/enrichment summaries and figures, used as workflow context rather than the primary manuscript path. |
+| `notebooks/04_directed_results_top30.ipynb` | sensitivity/variant analysis | Directed-results variant using a top-30 core-size setting for robustness/sensitivity comparison. | supporting | Top-30 core score artifacts and comparable directed-analysis summaries/figures. |
+| `notebooks/05_ml_baseline_global.ipynb` | exploratory/development | Trains an interpretable global Elastic Net baseline as a modeling sanity check and feature-selection reference. | no | `signature_metadata_with_core_score.csv` and `stable_genes_elasticnet_core_score.csv` exports under `data/exports/`. |
+| `notebooks/06_functional_context.ipynb` | manuscript-associated | Adds functional context for selected/stable genes and upstream enrichment results without redefining the core analyses. | supporting | Functional-context export of stable gene symbols under `data/exports/functional_context/` and interpretation notes. |
+| `notebooks/07_statistical_modeling_core_score.ipynb` | manuscript-associated | Models `core_score` associations with dose and cellular context to provide formal statistical support for directed results. | yes | Statistical model summaries and dose-response interpretation in notebook outputs. |
+| `notebooks/overlap_confirmation.ipynb` | supporting validation | Checks overlap among core-gene/core-score variants to document robustness across saved core definitions. | supporting | Overlap counts, retained fractions, and score-correlation checks in notebook outputs. |
+| `enrichment/analysis.ipynb` | supporting validation | Examines external VDR ChIP-seq/GEO resources for overlap-style context around VDR-related analyses. | supporting | VDR-overlap exploratory results in notebook outputs; retained as supporting workflow context. |
+
+## Reproduction guidance
+
+For manuscript-associated reproduction, start with the numbered workflow in `notebooks/` and prioritize `01_filtering.ipynb`, `02_EDA.ipynb`, `03_EDA_subset.ipynb`, `04_directed_results.ipynb`, `06_functional_context.ipynb`, and `07_statistical_modeling_core_score.ipynb`. The variant, baseline, overlap, and enrichment notebooks should be read as supporting records of the broader research workflow unless a specific check from those notebooks is needed.
