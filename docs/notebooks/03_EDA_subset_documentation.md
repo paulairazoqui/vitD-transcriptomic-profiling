@@ -73,15 +73,15 @@ To prevent silent downstream errors (misalignment, biased summaries, broken mode
 2. **Filter and re-align `sig_meta`** to keep only signatures that truly exist in the cleaned expression matrix.
 3. Keep other metadata tables unchanged (they remain valid reference maps).
 
-**Result:** a final set of **258 valid signatures** with expression data, consistently aligned with metadata.
+**Result:** a final set of **258 expression-complete manuscript signatures** with expression data, consistently aligned with metadata.
 
 ---
 
-## Signature Coverage and Imbalance (Compound + Cell Line)
+## Candidate Metadata Signature Coverage and Imbalance (Compound + Cell Line)
 
-Before interpreting any clustering or “strong responders”, we quantify how many signatures exist per factor.
+Before expression completeness cleanup, the metadata-level candidate set contains **422 signatures**. The counts below describe that candidate metadata set and are distinct from the final **258 expression-complete manuscript signatures** used for downstream analyses.
 
-### By compound (n signatures)
+### By compound (candidate metadata signatures; n)
 - **calcitriol:** 115  
 - **maxacalcitol:** 60  
 - **ercalcitriol:** 57  
@@ -97,7 +97,7 @@ Before interpreting any clustering or “strong responders”, we quantify how m
   - apply weighting / resampling strategies, or
   - report uncertainty driven by unequal sample sizes.
 
-### By cell line (n signatures)
+### By cell line (candidate metadata signatures; n)
 - **MCF7:** 116  
 - **A549:** 104  
 - **HA1E:** 92  

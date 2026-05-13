@@ -17,7 +17,7 @@ The results of this notebook guide downstream dimensionality reduction, clusteri
 
 ## Dataset Overview
 
-The dataset analyzed here consists of **258 transcriptional signatures**, selected after stringent filtering (see *EDA 01*), and includes:
+The dataset analyzed here consists of **258 expression-complete manuscript signatures**, selected after stringent filtering and expression-matrix cleanup (see *EDA 01*), and includes:
 
 - **7 vitamin D–related compounds**
 - **5 human cell lines**
@@ -63,7 +63,7 @@ This section examines the structure and completeness of the filtered metadata, i
 The expression matrix (`exp_df`) contains:
 
 - **12,328 genes** (rows)
-- **258 transcriptional signatures** (columns)
+- **258 expression-complete manuscript signatures** (columns)
 
 All values correspond to **z-score normalized expression levels** (LINCS Level 5).
 
