@@ -45,7 +45,7 @@ The subset was defined based on:
 - **Cell lines:** The most represented cell lines within the vitamin D subset.
 - **Treatment time:** Fixed at 24 hours to maximize comparability.
 
-As a result, expression values are **available only for 258 signatures**, each with a complete profile for all 12,328 genes. All other signatures remain in the metadata tables but have no associated expression values in this build.
+As a result, expression values are **available only for 258 expression-complete manuscript signatures**, each with a complete profile for all 12,328 genes. All other signatures remain in the metadata tables but have no associated expression values in this build.
 
 
 ---
@@ -205,7 +205,7 @@ The following diagram summarizes the structure of the SQLite database, including
   - `gene_id` *(FK → `Gene.gene_id`)*  
   - `signature_id` *(FK → `Signature.sig_id`)*  
   - `value` *(float)* — Level 5 z-score (MODZ)
-- **Source:** `processed_data/level5_beta_trt_cp_filtered.csv` (derived from `level5_beta_trt_cp_n720216x12328.gctx`, 33 GB original; subset contains only the 258 signatures analyzed here).
+- **Source:** `processed_data/level5_beta_trt_cp_filtered.csv` (derived from `level5_beta_trt_cp_n720216x12328.gctx`, 33 GB original; subset contains only the 258 expression-complete manuscript signatures analyzed here).
 - **Relations:** Many entries connect a given `Signature` to all 12,328 genes.
 - **Indexes:** Foreign-key indexes on `gene_id` and `signature_id`. For heavy workloads, consider a composite index `(signature_id, gene_id)`.
 - **Integrity:** No missing cells for the loaded signatures (full 12,328 genes per signature).
@@ -225,9 +225,9 @@ The following diagram summarizes the structure of the SQLite database, including
 - **Expression (processed):** `processed_data/vitD_expression_matrix.csv`  
   Filtered extract from the original  
   `level5_beta_trt_cp_n720216x12328.gctx` (≈33 GB), containing only the signatures defined in [Scope and Subset](#scope-and-subset).  
-  This subset includes **258 signatures**, each with a complete expression profile for all **12,328 genes**.
+  This subset includes **258 expression-complete manuscript signatures**, each with a complete expression profile for all **12,328 genes**.
 
-> The final file contains **258 signatures** matching these filters, each with complete expression profiles for all **12,328 genes**.
+> The final file contains **258 expression-complete manuscript signatures** matching these filters, each with complete expression profiles for all **12,328 genes**.
 
 > **Naming policy:** Column names and data types are **preserved** from the original LINCS metadata, with **minimal cleaning** for format consistency. No feature engineering or derivations were introduced in this build.
 
@@ -241,7 +241,7 @@ The following diagram summarizes the structure of the SQLite database, including
   - `Gene (gene_symbol)`
   - `ExpressionMatrixEntry (signature_id, gene_id)` (composite)
 - **Limitations:**
-  - Expression values are available **only** for the 258 signatures in [Scope and Subset](#scope-and-subset).
+  - Expression values are available **only** for the 258 expression-complete manuscript signatures in [Scope and Subset](#scope-and-subset).
   - Other perturbation types may appear in metadata but lack expression values in this filtered matrix.
   - The database is **static**; any extension requires explicit ETL steps.
 - **Portability:** Schema is RDBMS‑agnostic and can be migrated to PostgreSQL/MySQL via Django migrations.  

@@ -100,13 +100,13 @@ To ensure transcriptomic robustness, the matched signatures were filtered to ret
 
 - **At least 3 biological replicates** (`nsample ≥ 3`)
 
-After applying this criterion, **422 candidate signatures** were reduced to a high-quality subset.
+After compound/cell-line/timepoint selection and this `nsample ≥ 3` criterion, **422 metadata-level candidate signatures** remained. A later expression-matrix completeness step removes signatures without usable expression values and realigns metadata to the expression matrix.
 
 ---
 
 ## Outcome
 
-- **258 high-quality transcriptomic signatures** selected  
+- **258 final analysis-ready, expression-complete manuscript signatures** selected
 - Expression data extracted from Level 5 z-score matrix  
 - Final dataset saved for downstream exploratory analysis and targeted modeling
 
