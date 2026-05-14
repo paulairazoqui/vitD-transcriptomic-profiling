@@ -48,4 +48,5 @@ This manifest records the finalized manuscript figure tree. Manuscript and suppl
 
 - The paper figure tree is SVG-only for both main manuscript and supplementary assets.
 - No PNG or PDF files remain under `results/figures/paper/`.
-- No exploratory or development figures are currently listed as present outside the finalized paper hierarchy.
+- Exploratory and development figure artifacts are not retained in the finalized manuscript figure tree.
+- Variant notebooks used for sensitivity analyses do not persist manuscript figure outputs.
