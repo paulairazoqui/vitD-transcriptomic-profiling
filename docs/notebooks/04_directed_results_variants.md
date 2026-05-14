@@ -23,7 +23,7 @@ These variants document exploratory parameter choices and robustness-development
 
 | Notebook | Role | Key parameter difference | Manuscript workflow? | Figure-output behavior | Known output risks |
 | --- | --- | --- | --- | --- | --- |
-| `notebooks/04_directed_results.ipynb` | Canonical directed-results notebook for manuscript analyses and manuscript figure generation. | Uses the manuscript-directed core-gene and scoring parameters configured for the final workflow. | Yes | May write canonical manuscript figures and tables according to the manuscript figure/output workflow. | Canonical robustness sections may depend on externally generated variant core-score files; ensure those inputs are intentionally supplied and versioned before rerunning robustness panels. |
+| `notebooks/04_directed_results.ipynb` | Canonical directed-results notebook for manuscript analyses and manuscript figure generation. | Uses the canonical manuscript core-gene and scoring parameters (top_n=50, min_votes=2, target_up=42, target_dn=35). | Yes | May write canonical manuscript figures and tables according to the manuscript figure/output workflow. | Canonical robustness sections may depend on externally generated variant core-score files; ensure those inputs are intentionally supplied and versioned before rerunning robustness panels. |
 | `notebooks/04_directed_results_plus3.ipynb` | Strict-core sensitivity/development variant retained for provenance. | Uses a stricter core definition/development parameterization than the canonical notebook. | No | Must not write to canonical manuscript output paths; any figure or table exports should be variant-namespaced or disabled before execution. | Duplicated downstream logic, possible table/checkpoint writes, and possible non-namespaced outputs if rerun without cleanup. |
 | `notebooks/04_directed_results_top30.ipynb` | Top-30 core-window sensitivity/development variant retained for provenance. | Uses a top-30 core-window sensitivity/development parameterization rather than the canonical manuscript core window. | No | Must not write to canonical manuscript output paths; any figure or table exports should be variant-namespaced or disabled before execution. | Duplicated downstream logic, possible table/checkpoint writes, possible non-namespaced outputs, and a known naming mismatch around `core_v2_top100.pkl`. |
 
@@ -33,7 +33,7 @@ These variants document exploratory parameter choices and robustness-development
 - Variants are retained for sensitivity/development provenance only.
 - No variant notebook should write to canonical manuscript output paths.
 - Before running a variant, review all save/export cells for table writes, checkpoint writes, figure writes, and any path that is not variant-namespaced.
-- Variant output files should be temporary, explicitly namespaced, or generated outside canonical manuscript directories.
+- Variant output files should be explicitly namespaced and separated from canonical manuscript outputs.
 
 ## Known risks and follow-up consolidation
 
