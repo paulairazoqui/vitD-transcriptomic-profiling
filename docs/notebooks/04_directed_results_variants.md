@@ -36,6 +36,15 @@ These variants document exploratory parameter choices and robustness-development
 - Before running a variant, review all save/export cells for table writes, checkpoint writes, figure writes, and any path that is not variant-namespaced.
 - Any future output added to a variant must remain variant-namespaced and separated from canonical manuscript outputs.
 
+## Canonical robustness sensitivity artifacts
+
+Namespaced sensitivity artifacts now provide the robustness inputs consumed by the canonical notebook's robustness / Supplementary Figure S3 section:
+
+- `results/sensitivity/top30/core_scores_top30.csv`
+- `results/sensitivity/top100/core_scores_top100.csv`
+
+These CSVs are versioned sensitivity artifacts copied unchanged from historical notebook-root artifacts. They are not raw data. Going forward, the namespaced files under `results/sensitivity/` are the preferred sources for canonical robustness reruns; historical notebook-root copies are retained only for provenance and should not be treated as preferred inputs.
+
 ## Known risks and follow-up consolidation
 
 The variant notebooks duplicate substantial downstream directed-results logic after changing core-definition parameters. This creates maintenance risk because fixes to manuscript analyses, plotting, table export, or checkpoint handling can diverge across notebooks.
