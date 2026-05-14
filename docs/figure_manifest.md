@@ -1,68 +1,51 @@
 # Figure manifest
 
-This manifest documents the relationship between manuscript-associated figure files, other output figures, dashboard artifacts, and the notebooks that appear to generate or support them. It records the final submitted manuscript numbering alignment and does not regenerate figures, revise scientific interpretation, or alter notebook code/save paths.
+This manifest records the finalized manuscript figure tree. Manuscript and supplementary figure assets under `results/figures/paper/` are SVG-only; no PNG or PDF files are part of the paper figure hierarchy.
 
 ## Organization summary
 
-- Manuscript-associated figures are stored under `results/figures/paper/`, grouped by final manuscript figure directory (`figure_1`, `figure_2`, `figure_3`, `figure_4`, `figure_5`, and `figure_6`) plus `supplementary/`.
-- `results/figures/paper/figure_5/` is present and contains the final manuscript Figure 5 outputs.
-- Top-level files in `results/figures/` are retained separately from the `paper/` hierarchy. These appear to be exploratory, supplementary, robustness, or development outputs unless explicitly mirrored into `results/figures/paper/`.
-- Dashboard files are stored separately from static figures: source tables are under `data/dashboard/`, and dashboard deliverables are under `results/dashboard/`.
-- Notebook-to-output relationships were inferred from saved file paths and output names embedded in notebooks. Where a matching save path was not detected, the generating notebook is listed as not identified.
+- `results/figures/paper/` contains exactly 18 tracked SVG files.
+- Main manuscript figures are grouped under `figure_1/` through `figure_6/`.
+- Supplementary manuscript figures are grouped under `supplementary/`.
+- Dashboard artifacts are stored outside the static manuscript figure tree under `data/dashboard/` and `results/dashboard/`.
 
 ## Manuscript-associated figure mapping
 
-| Manuscript figure/panel | File path(s) | Generating notebook | Output type | Notes |
-|---|---|---|---|---|
-| Figure 1A and Figure 1B | `results/figures/paper/figure_1/figure_1A_pca.png`<br>`results/figures/paper/figure_1/figure_1A_pca.pdf` | `notebooks/03_EDA_subset.ipynb` | Main figure | Combined PCA file: the left panel corresponds to PCA colored by compound and the right panel corresponds to PCA colored by cell line. Figure 1A and Figure 1B are currently represented together in this file; no valid standalone Figure 1B file currently exists. |
-| Figure 1C | `results/figures/paper/figure_1/figure_1C_pca_scree_plot.png`<br>`results/figures/paper/figure_1/figure_1C_pca_scree_plot.pdf` | `notebooks/03_EDA_subset.ipynb` | Main figure | Renamed from the pre-alignment `figure_2C_pca_scree_plot.*` outputs without regenerating figure content. |
-| Figure 2A | `results/figures/paper/figure_2/figure_2A_top_genes_modulated.png`<br>`results/figures/paper/figure_2/figure_2A_top_genes_modulated.pdf`<br>`results/figures/paper/figure_2/figure_2A_top_genes_modulated.svg` | `notebooks/02_EDA.ipynb` | Main figure | Renamed from the pre-alignment `figure_3A_top_genes_modulated.*` outputs without regenerating figure content. |
-| Figure 2B | `results/figures/paper/figure_2/figure_2B_heatmap_expression.png`<br>`results/figures/paper/figure_2/figure_2B_heatmap_expression.pdf`<br>`results/figures/paper/figure_2/figure_2B_heatmap_expression.svg` | `notebooks/02_EDA.ipynb` | Main figure | Renamed from the pre-alignment `figure_3B_heatmap_expression.*` outputs without regenerating figure content. |
-| Figure 3A | `results/figures/paper/figure_3/figure_3A_hallmark_enrichment.png`<br>`results/figures/paper/figure_3/figure_3A_hallmark_enrichment.svg` | `notebooks/04_directed_results.ipynb` | Main figure | Hallmark enrichment across cell lines corresponding to submitted manuscript Figure 3A. |
-| Figure 3B | `results/figures/paper/figure_3/figure_3B_consensus_hallmarks.png`<br>`results/figures/paper/figure_3/figure_3B_consensus_hallmarks.pdf`<br>`results/figures/paper/figure_3/figure_3B_consensus_hallmarks.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Renamed from the pre-alignment `figure_4C_consensus_hallmarks.*` outputs without regenerating figure content. Variant notebooks reference the older output filename pattern, so reruns should be managed separately. |
-| Figure 3C | `results/figures/paper/figure_3/figure_3C_gene_level_effects.png`<br>`results/figures/paper/figure_3/figure_3C_gene_level_effects.pdf`<br>`results/figures/paper/figure_3/figure_3C_gene_level_effects.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Renamed from the pre-alignment `figure_4C_gene_level_effects.*` outputs without regenerating figure content. |
-| Figure 4 | `results/figures/paper/figure_4/Figure_4_forest_dose_response_by_cell.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Final manuscript Figure 4 SVG is preserved under the `figure_4` paper hierarchy. |
-| Figure 5A | `results/figures/paper/figure_5/figure_5A_shared_responsive_genes.png`<br>`results/figures/paper/figure_5/figure_5A_shared_responsive_genes.pdf`<br>`results/figures/paper/figure_5/figure_5A_shared_responsive_genes.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Final manuscript Figure 5 output preserved under the `figure_5` paper hierarchy. |
-| Figure 5B | `results/figures/paper/figure_5/figure_5B_shared_responsive_genes.png`<br>`results/figures/paper/figure_5/figure_5B_shared_responsive_genes.pdf`<br>`results/figures/paper/figure_5/figure_5B_shared_responsive_genes.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Final manuscript Figure 5 output preserved under the `figure_5` paper hierarchy. |
-| Figure 5C | `results/figures/paper/figure_5/figure_5C_hallmark_enrichment_patterns.png`<br>`results/figures/paper/figure_5/figure_5C_hallmark_enrichment_patterns.pdf`<br>`results/figures/paper/figure_5/figure_5C_hallmark_enrichment_patterns.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Final manuscript Figure 5 output preserved under the `figure_5` paper hierarchy. |
-| Figure 6 | `results/figures/paper/figure_6/figure_6_VDR-axis_gene_expression_changes.png`<br>`results/figures/paper/figure_6/figure_6_VDR-axis_gene_expression_changes.pdf`<br>`results/figures/paper/figure_6/figure_6_VDR-axis_gene_expression_changes.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Main figure | Already matched final manuscript Figure 6 numbering and was not renamed. Filename uses an uppercase acronym and hyphenated `VDR-axis` segment. |
+| Manuscript figure/panel | Canonical SVG path | Output type | Notes |
+|---|---|---|---|
+| Figure 1A and Figure 1B | `results/figures/paper/figure_1/figure_1AB_pca.svg` | Main figure | Combined PCA figure. |
+| Figure 1C | `results/figures/paper/figure_1/figure_1C_pca_scree_plot.svg` | Main figure | PCA scree plot. |
+| Figure 2A | `results/figures/paper/figure_2/figure_2A_top_genes_modulated.svg` | Main figure | Top modulated genes. |
+| Figure 2B | `results/figures/paper/figure_2/figure_2B_heatmap_expression.svg` | Main figure | Expression heatmap. |
+| Figure 3A | `results/figures/paper/figure_3/figure_3A_hallmark_enrichment.svg` | Main figure | Hallmark enrichment. |
+| Figure 3B | `results/figures/paper/figure_3/figure_3B_consensus_hallmarks.svg` | Main figure | Consensus hallmarks. |
+| Figure 3C | `results/figures/paper/figure_3/figure_3C_gene_level_effects.svg` | Main figure | Gene-level effects. |
+| Figure 4 | `results/figures/paper/figure_4/Figure_4_forest_dose_response_by_cell.svg` | Main figure | Forest dose response by cell. |
+| Figure 5A | `results/figures/paper/figure_5/figure_5A_shared_responsive_genes.svg` | Main figure | Shared responsive genes. |
+| Figure 5B | `results/figures/paper/figure_5/figure_5B_shared_responsive_genes.svg` | Main figure | Shared responsive genes. |
+| Figure 5C | `results/figures/paper/figure_5/figure_5C_hallmark_enrichment_patterns.svg` | Main figure | Hallmark enrichment patterns. |
+| Figure 6 | `results/figures/paper/figure_6/figure_6_VDR-axis_gene_expression_changes.svg` | Main figure | VDR-axis gene expression changes. |
 
-## Supplementary figure mapping
+## Supplementary manuscript figure mapping
 
-| Manuscript figure/panel | File path(s) | Generating notebook | Output type | Notes |
-|---|---|---|---|---|
-| Supplementary Figure S1 | `results/figures/paper/supplementary/figure_S1_gene_recurrence.png`<br>`results/figures/paper/supplementary/figure_S1_gene_recurrence.pdf` | `notebooks/02_EDA.ipynb` | Supplementary | Uses the `figure_S1_*` naming convention. |
-| Supplementary heatmap / top 100 genes | `results/figures/paper/supplementary/figure_supplementary_heatmap_top_100_genes.png`<br>`results/figures/paper/supplementary/figure_supplementary_heatmap_top_100_genes.pdf` | `notebooks/02_EDA.ipynb` | Supplementary | Uses a descriptive `figure_supplementary_*` naming convention rather than an `S#` panel label. |
-| Supplementary dose response by compound | `results/figures/supp_forest_dose_by_compound.png`<br>`results/figures/supp_forest_dose_by_compound.svg` | `notebooks/04_directed_results.ipynb` | Supplementary / exploratory | Top-level `results/figures/` output, not under `results/figures/paper/supplementary/`. |
-| Supplementary dose distribution by compound | `results/figures/supplementary_dose_distribution_by_compound.png`<br>`results/figures/supplementary_dose_distribution_by_compound.svg` | `notebooks/04_directed_results.ipynb` | Supplementary / exploratory | Top-level `results/figures/` output, not under `results/figures/paper/supplementary/`. |
-| Supplementary core score robustness | `results/figures/supplementary_core_score_robustness.png`<br>`results/figures/supplementary_core_score_robustness.svg` | `notebooks/04_directed_results.ipynb` | Supplementary / exploratory | Top-level `results/figures/` output, not under `results/figures/paper/supplementary/`. |
-| Supplementary core score by compound | `results/figures/supplementary_core_score_by_compound.png`<br>`results/figures/supplementary_core_score_by_compound.svg` | `notebooks/04_directed_results.ipynb` | Supplementary / exploratory | Top-level `results/figures/` output, not under `results/figures/paper/supplementary/`. |
-| Supplementary core score by cell line | `results/figures/supplementary_core_score_by_cell_line.png` | Not identified | Supplementary / exploratory | Top-level `results/figures/` output. A matching notebook save path was not detected. |
-
-## Exploratory and development outputs
-
-| Manuscript figure/panel | File path(s) | Generating notebook | Output type | Notes |
-|---|---|---|---|---|
-| Exploratory core score distribution | `results/figures/box_strip_core_scores.png` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Exploratory / development | Top-level figure output, separate from the paper hierarchy. |
-| Exploratory forest slopes | `results/figures/forest_slopes.png` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Exploratory / development | Top-level figure output, separate from the paper hierarchy. |
-| Exploratory forest dose response by cell | `results/figures/forest_dose_response_by_cell.png`<br>`results/figures/forest_dose_response_by_cell.svg` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Exploratory / development | Top-level figure output, separate from the paper hierarchy; related paper-hierarchy Figure 4 SVG is documented above. |
-| Exploratory Hallmarks dotplot by cell | `results/figures/dotplot_hallmarks_by_cell.png` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Exploratory / development | Top-level figure output generated by dynamic `dotplot_{library}_by_cell` naming. |
-| Exploratory Reactome dotplot by cell | `results/figures/dotplot_reactome_by_cell.png` | `notebooks/04_directed_results.ipynb`; also referenced by variant notebooks `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` | Exploratory / development | Top-level figure output generated by dynamic `dotplot_{library}_by_cell` naming. |
-| Exploratory cell Hallmarks dotplot | `results/figures/dotplot_cell_Hallmarks.png`<br>`results/figures/dotplot_cell_Hallmarks.svg` | Not identified | Exploratory / development | Top-level output with a different naming pattern from `dotplot_hallmarks_by_cell.png`; no matching save path was detected. Also documented above as the submitted manuscript Figure 3A source files. |
-| Exploratory cell Reactome dotplot | `results/figures/dotplot_cell_Reactome.png`<br>`results/figures/dotplot_cell_Reactome.svg` | Not identified | Exploratory / development | Top-level output with a different naming pattern from `dotplot_reactome_by_cell.png`; no matching save path was detected. |
+| Supplementary figure/output | Canonical SVG path | Output type | Notes |
+|---|---|---|---|
+| Supplementary gene recurrence | `results/figures/paper/supplementary/figure_S1_gene_recurrence.svg` | Supplementary figure | Gene recurrence. |
+| Supplementary top 100 gene heatmap | `results/figures/paper/supplementary/figure_supplementary_heatmap_top_100_genes.svg` | Supplementary figure | Top 100 gene heatmap. |
+| Supplementary forest dose by compound | `results/figures/paper/supplementary/supp_forest_dose_by_compound.svg` | Supplementary figure | Forest dose response by compound. |
+| Supplementary core score by compound | `results/figures/paper/supplementary/supplementary_core_score_by_compound.svg` | Supplementary figure | Core score by compound. |
+| Supplementary core score robustness | `results/figures/paper/supplementary/supplementary_core_score_robustness.svg` | Supplementary figure | Core score robustness. |
+| Supplementary dose distribution by compound | `results/figures/paper/supplementary/supplementary_dose_distribution_by_compound.svg` | Supplementary figure | Dose distribution by compound. |
 
 ## Dashboard outputs
 
-| Manuscript figure/panel | File path(s) | Generating notebook | Output type | Notes |
-|---|---|---|---|---|
-| Dashboard data exports | `data/dashboard/signatures_core.csv`<br>`data/dashboard/compound_summary.csv`<br>`data/dashboard/cluster_summary.csv` | `notebooks/02_EDA.ipynb` | Dashboard | Source tables for dashboard use, distinct from static manuscript figures. |
-| Dashboard deliverables | `results/dashboard/dashboard.pbix`<br>`results/dashboard/dashboard.pdf` | Not identified | Dashboard | Stored outside `results/figures/`; no notebook save path was detected for these deliverables. |
+| Output group | File path(s) | Output type | Notes |
+|---|---|---|---|
+| Dashboard data exports | `data/dashboard/signatures_core.csv`<br>`data/dashboard/compound_summary.csv`<br>`data/dashboard/cluster_summary.csv` | Dashboard | Source tables for dashboard use, distinct from static manuscript figures. |
+| Dashboard deliverables | `results/dashboard/dashboard.pbix`<br>`results/dashboard/dashboard.pdf` | Dashboard | Stored outside `results/figures/paper/`. |
 
-## Detected ambiguities and naming inconsistencies
+## Current figure-tree status
 
-- **Figure 1B representation:** Figure 1B is represented only as the right panel of the combined `results/figures/paper/figure_1/figure_1A_pca.{png,pdf}` PCA file; no valid standalone Figure 1B file currently exists.
-- **Figure 3 panel numbering aligned:** Consensus Hallmarks is labeled Figure 3B and gene-level effects is labeled Figure 3C, so no duplicated Figure 3C labels remain in this manifest.
-- **Mixed supplementary naming conventions:** Supplementary files use multiple patterns, including `figure_S1_*`, `figure_supplementary_*`, `supp_*`, and `supplementary_*`.
-- **Mixed supplementary locations:** Some supplementary-associated outputs are under `results/figures/paper/supplementary/`, while others are top-level files under `results/figures/`.
-- **Top-level exploratory outputs:** Files directly under `results/figures/` are not assumed to be manuscript main figures unless they are also represented in the `results/figures/paper/` hierarchy or explicitly identified by notebook context.
-- **Variant notebooks share output names:** `notebooks/04_directed_results_plus3.ipynb` and `notebooks/04_directed_results_top30.ipynb` reference several of the same figure filename patterns as `notebooks/04_directed_results.ipynb`, so rerunning variants may overwrite or reproduce similarly named outputs unless run in a controlled workflow.
+- The paper figure tree is SVG-only for both main manuscript and supplementary assets.
+- No PNG or PDF files remain under `results/figures/paper/`.
+- No exploratory or development figures are currently listed as present outside the finalized paper hierarchy.
