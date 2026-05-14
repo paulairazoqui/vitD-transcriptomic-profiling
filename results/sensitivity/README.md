@@ -19,7 +19,7 @@ Some historical artifacts still exist under `notebooks/` and are retained for pr
 - `notebooks/core_v2_top30.pkl`
 - `notebooks/core_v2_top100.pkl`
 
-Do not delete these yet. Future consolidation should migrate `notebooks/overlap_confirmation.ipynb` to namespaced artifacts or replace it with a consolidated sensitivity notebook.
+Do not delete these yet. `notebooks/04_sensitivity_core_score_robustness.ipynb` is now the preferred notebook for read-only robustness validation, while `notebooks/overlap_confirmation.ipynb` is retained for historical/provenance reference only. Historical notebook-root artifacts must remain in place until the migration is fully complete.
 
 ## Planned migration of overlap confirmation checks
 
@@ -29,4 +29,4 @@ No-delete policy: keep these historical files until migration is complete: `note
 
 ## Future consolidation
 
-A future consolidated notebook may live at `notebooks/04_sensitivity_core_score_robustness.ipynb`. It should validate and/or regenerate sensitivity artifacts in a parameterized, namespaced way, and it should not write to canonical manuscript output paths.
+Future consolidation should continue in `notebooks/04_sensitivity_core_score_robustness.ipynb` as a validation-only, namespaced scaffold. Any regeneration capability should remain optional, explicit, and disabled by default, and the scaffold should not write to canonical manuscript output paths.

@@ -19,6 +19,8 @@ Two directed-results variants are retained for sensitivity and development prove
 
 These variants document exploratory parameter choices and robustness-development history. They must not be used to regenerate manuscript figures or overwrite manuscript outputs. Their controlled outputs are now routed to variant-specific directories under `results/sensitivity/plus3/` and `results/sensitivity/top30/`.
 
+Current robustness/sensitivity validation should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. That scaffold performs validation-only checks against retained, namespaced artifacts and does not regenerate manuscript outputs by default. `notebooks/overlap_confirmation.ipynb` is retained only for provenance/history, and the directed-results variants remain provenance/development artifacts rather than current validation entry points.
+
 ## Notebook roles and output cautions
 
 | Notebook | Role | Key parameter difference | Manuscript workflow? | Figure-output behavior | Known output risks |
