@@ -3,6 +3,63 @@
 import pandas as pd
 
 
+def gene_set_overlap_row(comparison, left_artifact, right_artifact, direction, gene_set_pickle_loads):
+    """Return one read-only gene-set overlap validation row.
+
+    This validation helper expects preloaded gene-set pickle metadata in
+    ``gene_set_pickle_loads`` and reads the already-loaded entries for
+    ``left_artifact`` and ``right_artifact``. It does not load files, write
+    files, or otherwise mutate notebook artifacts. When both artifacts are
+    valid, retained fractions use explicit denominators: overlap divided by
+    the left set size for ``retained_fraction_of_left`` and overlap divided by
+    the right set size for ``retained_fraction_of_right``.
+    """
+    left_load = gene_set_pickle_loads[left_artifact]
+    right_load = gene_set_pickle_loads[right_artifact]
+    base_row = {
+        "comparison": comparison,
+        "direction": direction,
+        "left_artifact": left_artifact,
+        "right_artifact": right_artifact,
+        "left_size": pd.NA,
+        "right_size": pd.NA,
+        "overlap_size": pd.NA,
+        "retained_fraction_of_left": pd.NA,
+        "retained_fraction_of_right": pd.NA,
+        "status_message": None,
+    }
+
+    status_messages = []
+    if not left_load["valid"]:
+        status_messages.append(left_load["status_message"])
+    if not right_load["valid"]:
+        status_messages.append(right_load["status_message"])
+    if status_messages:
+        base_row["status_message"] = "; ".join(message for message in status_messages if message)
+        return base_row
+
+    left_set = left_load[direction]
+    right_set = right_load[direction]
+    overlap_size = len(left_set & right_set)
+    left_size = len(left_set)
+    right_size = len(right_set)
+
+    base_row.update(
+        {
+            "left_size": left_size,
+            "right_size": right_size,
+            "overlap_size": overlap_size,
+            "retained_fraction_of_left": overlap_size / left_size if left_size else pd.NA,
+            "retained_fraction_of_right": overlap_size / right_size if right_size else pd.NA,
+            "status_message": (
+                "ok; retained_fraction_of_left uses overlap_size/left_size; "
+                "retained_fraction_of_right uses overlap_size/right_size"
+            ),
+        }
+    )
+    return base_row
+
+
 def score_correlations(frame, comparisons):
     """Return Pearson and Spearman score correlations for requested column pairs.
 
