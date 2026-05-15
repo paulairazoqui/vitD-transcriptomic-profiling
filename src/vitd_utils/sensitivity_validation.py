@@ -124,6 +124,47 @@ def path_label(path, project_root):
         return str(path)
 
 
+def build_artifact_inventory(artifact_registry, project_root):
+    """Build a read-only inventory table for registered sensitivity artifacts.
+
+    This helper checks only whether each registered preferred and fallback path
+    exists. It does not create, move, modify, or delete files. The returned
+    DataFrame is suitable for notebook validation summaries and preserves the
+    registry insertion order, path-selection behavior, boolean existence flags,
+    and ``None`` path handling used by the sensitivity robustness notebook.
+    """
+    artifact_inventory_rows = []
+    for artifact_name, metadata in artifact_registry.items():
+        preferred_path = metadata["preferred_path"]
+        fallback_path = metadata["fallback_path"]
+        preferred_exists = preferred_path.exists() if preferred_path is not None else False
+        fallback_exists = fallback_path.exists() if fallback_path is not None else False
+        selected_path = preferred_path if preferred_exists else fallback_path if fallback_exists else preferred_path or fallback_path
+
+        artifact_inventory_rows.append(
+            {
+                "artifact": artifact_name,
+                "preferred_exists": preferred_exists,
+                "fallback_exists": fallback_exists,
+                "selected_path": path_label(selected_path, project_root),
+                "artifact_type": metadata["artifact_type"],
+                "status_role": metadata["status_role"],
+            }
+        )
+
+    return pd.DataFrame(
+        artifact_inventory_rows,
+        columns=[
+            "artifact",
+            "preferred_exists",
+            "fallback_exists",
+            "selected_path",
+            "artifact_type",
+            "status_role",
+        ],
+    )
+
+
 def resolve_registered_artifact(artifact_name, artifact_registry, project_root):
     """Resolve a registered artifact to the first existing preferred/fallback path.
 
