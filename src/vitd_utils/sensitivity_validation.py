@@ -1,5 +1,57 @@
 """Read-only validation helpers for sensitivity robustness notebooks."""
 
+import pandas as pd
+
+
+def score_correlations(frame, comparisons):
+    """Return Pearson and Spearman score correlations for requested column pairs.
+
+    Parameters
+    ----------
+    frame : pandas.DataFrame
+        Table containing score columns to compare. Values in each requested
+        pair are coerced with :func:`pandas.to_numeric` before rows with
+        missing values are dropped.
+    comparisons : iterable of tuple
+        Ordered ``(comparison_label, left_column, right_column)`` tuples. One
+        output row is returned for each tuple in the same order.
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with columns ``comparison``, ``pearson_r``, ``spearman_r``,
+        and ``n``. If the input frame is empty, a requested score column is
+        missing, or fewer than two valid paired numeric rows remain, the
+        corresponding correlation value is ``pd.NA``.
+    """
+    rows = []
+    for comparison_label, left_column, right_column in comparisons:
+        if frame.empty or left_column not in frame.columns or right_column not in frame.columns:
+            rows.append(
+                {
+                    "comparison": comparison_label,
+                    "pearson_r": pd.NA,
+                    "spearman_r": pd.NA,
+                    "n": 0,
+                }
+            )
+            continue
+
+        paired_scores = frame[[left_column, right_column]].apply(pd.to_numeric, errors="coerce").dropna()
+        rows.append(
+            {
+                "comparison": comparison_label,
+                "pearson_r": paired_scores[left_column].corr(paired_scores[right_column], method="pearson")
+                if len(paired_scores) >= 2
+                else pd.NA,
+                "spearman_r": paired_scores[left_column].corr(paired_scores[right_column], method="spearman")
+                if len(paired_scores) >= 2
+                else pd.NA,
+                "n": len(paired_scores),
+            }
+        )
+    return pd.DataFrame(rows, columns=["comparison", "pearson_r", "spearman_r", "n"])
+
 
 def path_label(path, project_root):
     """Return a repository-relative label for ``path`` when possible.
