@@ -48,7 +48,7 @@ The repository is intended to support transparent inspection and rerunning of th
 Basic setup:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/paulairazoqui/vitD-transcriptomic-profiling
 cd vitD-transcriptomic-profiling
 python -m venv .venv
 source .venv/bin/activate
