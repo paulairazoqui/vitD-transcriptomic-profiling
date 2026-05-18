@@ -29,6 +29,7 @@ import numpy as np
 import pandas as pd
 from statsmodels.stats.multitest import multipletests
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import seaborn as sns
 
 from .idsymbols import map_symbols_or_ids
@@ -534,7 +535,7 @@ def dotplot_top(
     left_margin: float = 0.30,               # reserved for long labels (0–1)
     bottom_pad: float = 0.26,                # room for both legends at bottom
     point_sizes: tuple = (26, 140),          # (min,max) marker sizes
-) -> None:
+) -> Optional[Figure]:
     """
     Create a publication-optimized dot plot summarizing enrichment results.
 
@@ -571,8 +572,9 @@ def dotplot_top(
 
     Returns
     -------
-    None
-        Displays the plot (and saves a PNG if config.SAVE_FIGS is True).
+    Optional[Figure]
+        The matplotlib Figure object that was displayed (and saved as PNG/SVG if
+        config.SAVE_FIGS is True), or None when no results are available.
 
     Notes
     -----
@@ -598,7 +600,7 @@ def dotplot_top(
 
     if not coll:
         print(f"[info] No results to plot for {lib_name}.")
-        return
+        return None
 
     M = pd.concat(coll, ignore_index=True)
 
@@ -710,3 +712,4 @@ def dotplot_top(
         print(f"[saved] {out_png}")
         print(f"[saved] {out_svg}")
     plt.show()
+    return fig
