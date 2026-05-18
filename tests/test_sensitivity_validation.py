@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-pytest.importorskip("pandas")
+pd = pytest.importorskip("pandas")
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = PROJECT_ROOT / "src"
@@ -14,11 +14,224 @@ if str(SRC_ROOT) not in sys.path:
 
 from vitd_utils.sensitivity_validation import (  # noqa: E402
     build_artifact_inventory,
+    gene_set_overlap_row,
     missing_object_row,
     path_label,
     resolve_registered_artifact,
+    score_correlations,
     validation_detail,
 )
+
+
+def assert_missing(value):
+    assert pd.isna(value)
+
+
+def test_score_correlations_reports_expected_columns_order_for_numeric_input():
+    frame = pd.DataFrame({"score_a": [1, 2, 3], "score_b": [2, 4, 6]})
+
+    result = score_correlations(frame, [("a_vs_b", "score_a", "score_b")])
+
+    assert list(result.columns) == ["comparison", "pearson_r", "spearman_r", "n"]
+    assert result.to_dict(orient="records") == [
+        {"comparison": "a_vs_b", "pearson_r": 1.0, "spearman_r": 1.0, "n": 3}
+    ]
+
+
+def test_score_correlations_coerces_nonnumeric_values_and_drops_missing_pairs():
+    frame = pd.DataFrame(
+        {
+            "score_a": ["1", "bad", "3", "", None],
+            "score_b": ["2", "4", "6", "8", "10"],
+        }
+    )
+
+    result = score_correlations(frame, [("coerced", "score_a", "score_b")])
+
+    assert result.loc[0, "n"] == 2
+    assert result.loc[0, "pearson_r"] == 1.0
+    assert result.loc[0, "spearman_r"] == 1.0
+
+
+def test_score_correlations_returns_missing_values_for_empty_frame():
+    result = score_correlations(
+        pd.DataFrame(columns=["score_a", "score_b"]),
+        [("empty", "score_a", "score_b")],
+    )
+
+    assert result.loc[0, "comparison"] == "empty"
+    assert result.loc[0, "n"] == 0
+    assert_missing(result.loc[0, "pearson_r"])
+    assert_missing(result.loc[0, "spearman_r"])
+
+
+def test_score_correlations_returns_missing_values_for_missing_comparison_column():
+    result = score_correlations(
+        pd.DataFrame({"score_a": [1, 2, 3]}),
+        [("missing_right", "score_a", "score_b")],
+    )
+
+    assert result.loc[0, "comparison"] == "missing_right"
+    assert result.loc[0, "n"] == 0
+    assert_missing(result.loc[0, "pearson_r"])
+    assert_missing(result.loc[0, "spearman_r"])
+
+
+def test_score_correlations_returns_missing_values_for_exactly_one_valid_pair():
+    frame = pd.DataFrame({"score_a": [1, None], "score_b": [2, 4]})
+
+    result = score_correlations(frame, [("one_pair", "score_a", "score_b")])
+
+    assert result.loc[0, "n"] == 1
+    assert_missing(result.loc[0, "pearson_r"])
+    assert_missing(result.loc[0, "spearman_r"])
+
+
+def test_score_correlations_constant_vector_has_undefined_correlations():
+    frame = pd.DataFrame({"constant": [1, 1, 1], "score_b": [2, 3, 4]})
+
+    result = score_correlations(frame, [("constant", "constant", "score_b")])
+
+    assert result.loc[0, "n"] == 3
+    assert_missing(result.loc[0, "pearson_r"])
+    assert_missing(result.loc[0, "spearman_r"])
+
+
+def gene_set_loads(
+    left_valid=True,
+    right_valid=True,
+    left_up=None,
+    right_up=None,
+    left_down=None,
+    right_down=None,
+):
+    return {
+        "left": {
+            "valid": left_valid,
+            "status_message": None if left_valid else "left invalid",
+            "UP": set() if left_up is None else set(left_up),
+            "DOWN": set() if left_down is None else set(left_down),
+        },
+        "right": {
+            "valid": right_valid,
+            "status_message": None if right_valid else "right invalid",
+            "UP": set() if right_up is None else set(right_up),
+            "DOWN": set() if right_down is None else set(right_down),
+        },
+    }
+
+
+def test_gene_set_overlap_row_reports_expected_keys_and_valid_up_overlap():
+    row = gene_set_overlap_row(
+        "dose",
+        "left",
+        "right",
+        "UP",
+        gene_set_loads(left_up={"A", "B", "C"}, right_up={"B", "C", "D", "E"}),
+    )
+
+    assert list(row) == [
+        "comparison",
+        "direction",
+        "left_artifact",
+        "right_artifact",
+        "left_size",
+        "right_size",
+        "overlap_size",
+        "retained_fraction_of_left",
+        "retained_fraction_of_right",
+        "status_message",
+    ]
+    assert row == {
+        "comparison": "dose",
+        "direction": "UP",
+        "left_artifact": "left",
+        "right_artifact": "right",
+        "left_size": 3,
+        "right_size": 4,
+        "overlap_size": 2,
+        "retained_fraction_of_left": 2 / 3,
+        "retained_fraction_of_right": 2 / 4,
+        "status_message": (
+            "ok; retained_fraction_of_left uses overlap_size/left_size; "
+            "retained_fraction_of_right uses overlap_size/right_size"
+        ),
+    }
+
+
+def test_gene_set_overlap_row_reports_valid_down_overlap():
+    row = gene_set_overlap_row(
+        "dose",
+        "left",
+        "right",
+        "DOWN",
+        gene_set_loads(left_down={"A", "B"}, right_down={"B", "C"}),
+    )
+
+    assert row["left_size"] == 2
+    assert row["right_size"] == 2
+    assert row["overlap_size"] == 1
+    assert row["retained_fraction_of_left"] == 1 / 2
+    assert row["retained_fraction_of_right"] == 1 / 2
+
+
+@pytest.mark.parametrize(
+    ("left_valid", "right_valid", "expected_message"),
+    [
+        (False, True, "left invalid"),
+        (True, False, "right invalid"),
+        (False, False, "left invalid; right invalid"),
+    ],
+)
+def test_gene_set_overlap_row_reports_invalid_artifacts(
+    left_valid, right_valid, expected_message
+):
+    row = gene_set_overlap_row(
+        "dose",
+        "left",
+        "right",
+        "UP",
+        gene_set_loads(left_valid=left_valid, right_valid=right_valid),
+    )
+
+    assert row["status_message"] == expected_message
+    assert_missing(row["left_size"])
+    assert_missing(row["right_size"])
+    assert_missing(row["overlap_size"])
+    assert_missing(row["retained_fraction_of_left"])
+    assert_missing(row["retained_fraction_of_right"])
+
+
+def test_gene_set_overlap_row_uses_missing_fraction_for_empty_left_denominator():
+    row = gene_set_overlap_row(
+        "dose",
+        "left",
+        "right",
+        "UP",
+        gene_set_loads(left_up=set(), right_up={"A", "B"}),
+    )
+
+    assert row["left_size"] == 0
+    assert row["right_size"] == 2
+    assert row["overlap_size"] == 0
+    assert_missing(row["retained_fraction_of_left"])
+    assert row["retained_fraction_of_right"] == 0
+
+
+def test_gene_set_overlap_row_uses_missing_fraction_for_empty_right_denominator():
+    row = gene_set_overlap_row(
+        "dose",
+        "left",
+        "right",
+        "UP",
+        gene_set_loads(left_up={"A", "B"}, right_up=set()),
+    )
+
+    assert row["left_size"] == 2
+    assert row["right_size"] == 0
+    assert row["overlap_size"] == 0
+    assert row["retained_fraction_of_left"] == 0
+    assert_missing(row["retained_fraction_of_right"])
 
 
 @pytest.fixture
