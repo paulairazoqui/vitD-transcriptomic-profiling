@@ -7,8 +7,8 @@ This audit identifies notebook-local helper logic that can be extracted into `sr
 Scope audited:
 
 - `notebooks/04_directed_results.ipynb`
-- `notebooks/04_directed_results_top30.ipynb`
-- `notebooks/04_directed_results_plus3.ipynb`
+- `notebooks/deprecated/04_directed_results_top30.ipynb`
+- `notebooks/deprecated/04_directed_results_plus3.ipynb`
 - `notebooks/04_sensitivity_core_score_robustness.ipynb`
 
 Important existing context:
@@ -21,21 +21,21 @@ Important existing context:
 
 | Logic area | Current notebook locations | Current behavior | Duplication / reuse opportunity |
 | --- | --- | --- | --- |
-| Consensus core construction and scoring orchestration | `04_directed_results.ipynb` cell 12; `04_directed_results_top30.ipynb` cell 13; `04_directed_results_plus3.ipynb` cell 13 | Builds `effects_by_cell`, calls `coregenes.build_consensus_core(...)`, computes `core_score_for_matrix(...)`, drops any existing `META.core_score`, and merges scores back by `sig_id`. | Same orchestration repeated with different `top_n`, `min_votes`, `target_up`, and `target_dn` values. Existing `src` primitives are used correctly; extraction should wrap orchestration only. |
+| Consensus core construction and scoring orchestration | `04_directed_results.ipynb` cell 12; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 13; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 13 | Builds `effects_by_cell`, calls `coregenes.build_consensus_core(...)`, computes `core_score_for_matrix(...)`, drops any existing `META.core_score`, and merges scores back by `sig_id`. | Same orchestration repeated with different `top_n`, `min_votes`, `target_up`, and `target_dn` values. Existing `src` primitives are used correctly; extraction should wrap orchestration only. |
 | Core-variant parameterization | Canonical notebook cell 12 uses `config.N_TOP`, `config.VOTE_MIN`, `config.CORE_UP_N`, `config.CORE_DN_N`; top30 notebook cell 13 hard-codes `top_n=30`; plus3 notebook cell 13 hard-codes `min_votes=3`, `target_up=18`, `target_dn=6`; sensitivity notebook cell 6 defines `VARIANTS`. | Parameters are spread across config, variant notebooks, and sensitivity registry. | A single dataclass or registry helper could make variant names and parameters auditable without altering calculations. |
-| Vote/tie audit tables | `04_directed_results.ipynb` cell 16; `04_directed_results_top30.ipynb` cell 18; `04_directed_results_plus3.ipynb` cell 16 | Calls `top_bottom_by_column`, `vote_counts`, filters by `config.VOTE_MIN`, computes UP/DOWN tie scores, and creates `audit_up` / `audit_dn`. | Very similar logic, but top30 audit currently uses `top_n=100` despite a comment saying `# 50`; plus3 audit uses `config.VOTE_MIN` even though consensus scoring used `min_votes=3`. Extract only after clarifying whether those mismatches are intentional audit/provenance behavior. |
-| Ranked gene lists for GSEA | `04_directed_results.ipynb` Section 6.1; `04_directed_results_top30.ipynb` cell 35; `04_directed_results_plus3.ipynb` cell 35 | Builds a symbol map from `geneinfo_beta.txt`, loops through `effects_by_cell.columns`, calls `gsea.make_preranked`, stores `{cell_id: DataFrame}`, optionally writes `.rnk` files under `config.RESULTS_DIR / "preranked_lists"`. | The loop and optional save policy are duplicated. `gsea.make_preranked` already handles one series; a future helper can handle a full matrix and safe optional writing. |
+| Vote/tie audit tables | `04_directed_results.ipynb` cell 16; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 18; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 16 | Calls `top_bottom_by_column`, `vote_counts`, filters by `config.VOTE_MIN`, computes UP/DOWN tie scores, and creates `audit_up` / `audit_dn`. | Very similar logic, but top30 audit currently uses `top_n=100` despite a comment saying `# 50`; plus3 audit uses `config.VOTE_MIN` even though consensus scoring used `min_votes=3`. Extract only after clarifying whether those mismatches are intentional audit/provenance behavior. |
+| Ranked gene lists for GSEA | `04_directed_results.ipynb` Section 6.1; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 35; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 35 | Builds a symbol map from `geneinfo_beta.txt`, loops through `effects_by_cell.columns`, calls `gsea.make_preranked`, stores `{cell_id: DataFrame}`, optionally writes `.rnk` files under `config.RESULTS_DIR / "preranked_lists"`. | The loop and optional save policy are duplicated. `gsea.make_preranked` already handles one series; a future helper can handle a full matrix and safe optional writing. |
 | Robustness score comparison | `04_directed_results.ipynb` cells 33-34; `04_sensitivity_core_score_robustness.ipynb` cells 13-17 | Canonical notebook manually reads top30/top50/top100 score CSVs and merges by `sig_id` for plotting. Sensitivity notebook resolves registered artifacts, validates loaders, merges score columns, and computes Pearson/Spearman globally and by cell line. | Sensitivity notebook has a more reusable validation implementation. Extraction is useful but should remain read-only and preserve the canonical plot code until equivalence is verified. |
 | Sensitivity artifact validation | `04_sensitivity_core_score_robustness.ipynb` cells 2, 4, 6, 8, 9, 11, 13, 14, 26 | Defines project paths, source notebooks, `ARTIFACT_REGISTRY`, CSV schema checks, loader status tables, merge validation, and validation-summary rows. | Good candidate for extraction into validation utilities after separating pure path/registry helpers from notebook presentation. |
 | Pickle gene-set validation and overlap validation | `04_sensitivity_core_score_robustness.ipynb` cells 4, 19, 20, 26 | Resolves registered pickle artifacts, loads read-only tuples of `(up_set, down_set)`, checks type/length/schema, computes overlap sizes and retained fractions for UP and DOWN. | Pure and reusable, but it touches historical/provenance artifacts and should wait until artifact naming and migration policy are confirmed. |
-| Output path safety helpers | Variant notebook import cells: `04_directed_results_top30.ipynb` cell 3; `04_directed_results_plus3.ipynb` cell 3. Sensitivity notebook cells 2, 4, 6, 8, 9, 26. | Variant notebooks disable figure saving, redirect `config.RESULTS_DIR` and `config.FIG_DIR` to namespaced sensitivity subdirectories, and create directories. Sensitivity notebook labels paths relative to project root and summarizes output-safety policy. | A small path helper would reduce accidental manuscript-output overwrites, but mutating global `config` from a helper should be deferred or very carefully validated. |
+| Output path safety helpers | Variant notebook import cells: `notebooks/deprecated/04_directed_results_top30.ipynb` cell 3; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 3. Sensitivity notebook cells 2, 4, 6, 8, 9, 26. | Variant notebooks disable figure saving, redirect `config.RESULTS_DIR` and `config.FIG_DIR` to namespaced sensitivity subdirectories, and create directories. Sensitivity notebook labels paths relative to project root and summarizes output-safety policy. | A small path helper would reduce accidental manuscript-output overwrites, but mutating global `config` from a helper should be deferred or very carefully validated. |
 
 ## 3. Candidate helpers for src
 
 ### 3.1 `build_core_scores_table`
 
 - **Proposed location/name:** `vitd_utils.coregenes.build_core_scores_table` or `vitd_utils.coreworkflow.build_core_scores_table`.
-- **Current notebook locations:** `04_directed_results.ipynb` cell 12; `04_directed_results_top30.ipynb` cell 13; `04_directed_results_plus3.ipynb` cell 13.
+- **Current notebook locations:** `04_directed_results.ipynb` cell 12; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 13; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 13.
 - **Inputs:**
   - `exp: pd.DataFrame` genes × signatures expression/effect matrix.
   - `meta: pd.DataFrame` containing `sig_id` and cell metadata.
@@ -75,7 +75,7 @@ Important existing context:
 ### 3.3 `consensus_vote_audit_tables`
 
 - **Proposed location/name:** `vitd_utils.coregenes.consensus_vote_audit_tables`.
-- **Current notebook locations:** `04_directed_results.ipynb` cell 16; `04_directed_results_top30.ipynb` cell 18; `04_directed_results_plus3.ipynb` cell 16.
+- **Current notebook locations:** `04_directed_results.ipynb` cell 16; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 18; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 16.
 - **Inputs:**
   - `effects_by_cell: pd.DataFrame`.
   - `top_n: int`.
@@ -92,7 +92,7 @@ Important existing context:
 ### 3.4 `make_preranked_lists_by_column`
 
 - **Proposed location/name:** `vitd_utils.gsea.make_preranked_lists_by_column`.
-- **Current notebook locations:** Section 6.1 in `04_directed_results.ipynb`; `04_directed_results_top30.ipynb` cell 35; `04_directed_results_plus3.ipynb` cell 35.
+- **Current notebook locations:** Section 6.1 in `04_directed_results.ipynb`; `notebooks/deprecated/04_directed_results_top30.ipynb` cell 35; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 35.
 - **Inputs:**
   - `effects_by_column: pd.DataFrame` genes × cell/context.
   - `sym_map: pd.Series`.
@@ -206,7 +206,7 @@ Important existing context:
 ### 3.11 `configure_variant_output_dirs`
 
 - **Proposed location/name:** `vitd_utils.config.configure_variant_output_dirs` or `vitd_utils.paths.configure_variant_output_dirs`.
-- **Current notebook locations:** `04_directed_results_top30.ipynb` cell 3; `04_directed_results_plus3.ipynb` cell 3.
+- **Current notebook locations:** `notebooks/deprecated/04_directed_results_top30.ipynb` cell 3; `notebooks/deprecated/04_directed_results_plus3.ipynb` cell 3.
 - **Inputs:**
   - `variant_name: str`.
   - `root_dir: Path` or config module.
@@ -294,7 +294,7 @@ Future extraction PRs should include these checks before notebook code is switch
 - Assert identical core gene IDs by direction and variant.
 - Assert identical `core_score` values by `sig_id`.
 - Assert identical `META` row count, `sig_id` membership, and `core_score` null count.
-- Confirm canonical `core_scores_top50.csv` and variant score CSVs are not rewritten unless intentionally requested.
+- Confirm archived historical `results/sensitivity/historical/notebook_root/core_scores_top50.csv` and variant score CSVs are not rewritten unless intentionally requested.
 
 ### Ranked-list equivalence
 
