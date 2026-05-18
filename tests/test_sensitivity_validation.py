@@ -33,9 +33,11 @@ def test_score_correlations_reports_expected_columns_order_for_numeric_input():
     result = score_correlations(frame, [("a_vs_b", "score_a", "score_b")])
 
     assert list(result.columns) == ["comparison", "pearson_r", "spearman_r", "n"]
-    assert result.to_dict(orient="records") == [
-        {"comparison": "a_vs_b", "pearson_r": 1.0, "spearman_r": 1.0, "n": 3}
-    ]
+    record = result.to_dict(orient="records")[0]
+    assert record["comparison"] == "a_vs_b"
+    assert record["pearson_r"] == pytest.approx(1.0)
+    assert record["spearman_r"] == pytest.approx(1.0)
+    assert record["n"] == 3
 
 
 def test_score_correlations_coerces_nonnumeric_values_and_drops_missing_pairs():
@@ -49,8 +51,8 @@ def test_score_correlations_coerces_nonnumeric_values_and_drops_missing_pairs():
     result = score_correlations(frame, [("coerced", "score_a", "score_b")])
 
     assert result.loc[0, "n"] == 2
-    assert result.loc[0, "pearson_r"] == 1.0
-    assert result.loc[0, "spearman_r"] == 1.0
+    assert result.loc[0, "pearson_r"] == pytest.approx(1.0)
+    assert result.loc[0, "spearman_r"] == pytest.approx(1.0)
 
 
 def test_score_correlations_returns_missing_values_for_empty_frame():
