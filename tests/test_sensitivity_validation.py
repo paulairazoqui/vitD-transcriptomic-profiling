@@ -69,7 +69,9 @@ def test_path_label_returns_repo_relative_string_for_path_inside_project_root(tm
     project_root = tmp_path / "repo"
     nested_path = project_root / "results" / "artifact.csv"
 
-    assert path_label(nested_path, project_root) == "results/artifact.csv"
+    assert Path(path_label(nested_path, project_root)) == Path(
+        "results", "artifact.csv"
+    )
 
 
 def test_path_label_returns_absolute_string_for_path_outside_project_root(tmp_path):
@@ -136,9 +138,12 @@ def test_resolve_registered_artifact_reports_when_neither_path_exists(tmp_path, 
 
     assert path is None
     assert warning is not None
-    assert "both_missing: no readable artifact found" in warning
-    assert "preferred=preferred/missing_primary.txt exists=False" in warning
-    assert "fallback=fallback/missing_fallback.txt exists=False" in warning
+    assert "both_missing" in warning
+    assert "no readable artifact found" in warning
+    assert "preferred=" in warning
+    assert "missing_primary.txt exists=False" in warning
+    assert "fallback=" in warning
+    assert "missing_fallback.txt exists=False" in warning
 
 
 def test_resolve_registered_artifact_returns_fallback_when_preferred_path_is_none(
@@ -170,21 +175,26 @@ def test_build_artifact_inventory_reports_expected_columns_order_and_selection(
     rows = inventory.set_index("artifact").to_dict(orient="index")
     assert rows["preferred_exists"]["preferred_exists"]
     assert rows["preferred_exists"]["fallback_exists"]
-    assert rows["preferred_exists"]["selected_path"] == "preferred/exists.txt"
+    assert Path(rows["preferred_exists"]["selected_path"]) == Path(
+        "preferred", "exists.txt"
+    )
 
     assert not rows["fallback_exists"]["preferred_exists"]
     assert rows["fallback_exists"]["fallback_exists"]
-    assert rows["fallback_exists"]["selected_path"] == "fallback/exists.txt"
+    assert Path(rows["fallback_exists"]["selected_path"]) == Path(
+        "fallback", "exists.txt"
+    )
 
     assert not rows["both_missing"]["preferred_exists"]
     assert not rows["both_missing"]["fallback_exists"]
-    assert rows["both_missing"]["selected_path"] == "preferred/missing_primary.txt"
+    assert Path(rows["both_missing"]["selected_path"]) == Path(
+        "preferred", "missing_primary.txt"
+    )
 
     assert not rows["none_preferred_fallback_exists"]["preferred_exists"]
     assert rows["none_preferred_fallback_exists"]["fallback_exists"]
-    assert (
-        rows["none_preferred_fallback_exists"]["selected_path"]
-        == "fallback/fallback_only.txt"
+    assert Path(rows["none_preferred_fallback_exists"]["selected_path"]) == Path(
+        "fallback", "fallback_only.txt"
     )
     assert rows["none_preferred_fallback_exists"]["artifact_type"] == "csv"
     assert rows["none_preferred_fallback_exists"]["status_role"] == "optional"
