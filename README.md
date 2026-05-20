@@ -4,6 +4,32 @@ This repository is a vitamin D transcriptomics research repository centered on t
 
 The manuscript analyzes vitamin D-related perturbational transcriptomic signatures from **LINCS L1000**. The validated manuscript scope includes **258 perturbational signatures**, **5 human cell lines** (**A549, HA1E, MCF7, PC3, U2OS**), **7 vitamin D-related compounds**, and **24-hour perturbations**. Analyses focus on gene-level variability, Hallmark pathway enrichment, a consensus transcriptional core, the `core_score` metric, dose-response analysis, and VDR-axis analysis.
 
+## Start here (60-second navigation)
+
+This repository is intentionally maintained as a **manuscript + future vitamin D transcriptomics research platform** with five complementary tracks:
+
+1. **Manuscript-associated analyses**
+2. **Robustness/validation**
+3. **Exploratory/future analyses**
+4. **Dashboard/backend support**
+5. **Deprecated/provenance records**
+
+Quick links:
+- Notebook index: [`docs/notebook_index.md`](docs/notebook_index.md)
+- Environment setup: [`docs/environment_setup.md`](docs/environment_setup.md)
+- Sensitivity/validation outputs: [`results/sensitivity/README.md`](results/sensitivity/README.md)
+- Database documentation: [`docs/database_documentation.md`](docs/database_documentation.md)
+
+### Track-to-path map
+
+| Track | Primary paths |
+|---|---|
+| Manuscript-associated analyses | `notebooks/01_*`, `notebooks/02_*`, `notebooks/03_*`, `notebooks/04_*`, `notebooks/06_*`, `notebooks/07_*`, `results/figures/`, `results/enrichment/`, `results/dfs/` |
+| Robustness/validation | `results/sensitivity/`, related validation notebooks listed in `docs/notebook_index.md` |
+| Exploratory/future analyses | exploratory notebooks under `notebooks/`, supporting methods development in `enrichment/` and related outputs in `results/` |
+| Dashboard/backend support | `backend/`, dashboard-ready structures in `data/`, and `docs/database_documentation.md` |
+| Deprecated/provenance records | deprecated and provenance-tracking materials documented in repository paths and notebook notes |
+
 ## Repository structure
 
 ```text
@@ -38,11 +64,7 @@ The primary manuscript analyses are organized as notebooks in `notebooks/`:
 Generated manuscript-associated outputs are organized under `results/`, with figures in `results/figures/`, enrichment outputs in `results/enrichment/`, and tabular outputs in `results/dfs/`.
 
 
-### Platform architecture note
-
-The repository is intentionally maintained as a combined platform with five complementary tracks: **manuscript-associated analyses**, **robustness/validation**, **exploratory/future analyses**, **dashboard/backend support**, and **deprecated/provenance records**.
-
-### Exploratory, development, and supporting materials
+#### Exploratory, development, and supporting materials
 
 Additional notebooks and files document exploratory analyses, supporting checks, analysis variants, dashboard-ready data, and database/dashboard infrastructure. These materials are part of the broader research workflow and should be interpreted according to their local notebook context rather than as additional manuscript claims.
 
