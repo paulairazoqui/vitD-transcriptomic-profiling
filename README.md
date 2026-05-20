@@ -37,6 +37,11 @@ The primary manuscript analyses are organized as notebooks in `notebooks/`:
 
 Generated manuscript-associated outputs are organized under `results/`, with figures in `results/figures/`, enrichment outputs in `results/enrichment/`, and tabular outputs in `results/dfs/`.
 
+
+### Platform architecture note
+
+The repository is intentionally maintained as a combined platform with five complementary tracks: **manuscript-associated analyses**, **robustness/validation**, **exploratory/future analyses**, **dashboard/backend support**, and **deprecated/provenance records**.
+
 ### Exploratory, development, and supporting materials
 
 Additional notebooks and files document exploratory analyses, supporting checks, analysis variants, dashboard-ready data, and database/dashboard infrastructure. These materials are part of the broader research workflow and should be interpreted according to their local notebook context rather than as additional manuscript claims.
