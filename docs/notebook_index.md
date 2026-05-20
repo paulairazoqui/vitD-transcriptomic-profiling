@@ -2,6 +2,19 @@
 
 This repository keeps the manuscript-associated analysis workflow alongside broader exploratory, validation, and support notebooks. The main manuscript track is organized around the numbered notebooks in `notebooks/`: dataset definition (`01`), exploratory quality/structure checks (`02`–`03`), directed result generation (`04`), functional interpretation (`06`), and statistical modeling (`07`). Additional notebooks are retained to document sensitivity checks, validation steps, dashboard/database support, or exploratory development work; they are not all required to reproduce the manuscript-associated results.
 
+
+## Five-track taxonomy
+
+This repository is framed as a **manuscript + future vitamin D transcriptomics research platform**. Notebooks and related materials are organized into five active tracks:
+
+1. **Manuscript track** — notebooks and artifacts used to regenerate manuscript-associated analyses.
+2. **Robustness/validation track** — sensitivity checks and validation-focused analyses that test the stability and context of findings.
+3. **Exploratory/future analyses** — hypothesis-generation and forward-looking analyses that support ongoing research extension.
+4. **Dashboard/backend support** — notebook outputs and infrastructure-oriented analyses that feed dashboard/database workflows and operational research support.
+5. **Deprecated/provenance** — historically important records and prior variants maintained for provenance, interpretability, and auditability (not deletion candidates, and not active operational workflows).
+
+All five tracks are maintained as meaningful parts of the broader platform. Manuscript, robustness/validation, exploratory/future, and dashboard/backend tracks support active research/infrastructure workflows, while deprecated/provenance materials are preserved as maintained provenance and audit records rather than deletion candidates.
+
 ## Notebook classification
 
 | notebook | category | purpose | manuscript-associated? | primary outputs/results |
@@ -12,7 +25,7 @@ This repository keeps the manuscript-associated analysis workflow alongside broa
 | `notebooks/04_directed_results.ipynb` | manuscript-associated | Runs the primary directed analyses: consensus core definition, `core_score`, dose-response summaries, pathway enrichment, and manuscript figure generation. | yes | Core gene/score files, dose-response tables, enrichment/preranked outputs, and manuscript figures under `results/`. |
 | `notebooks/deprecated/04_directed_results_plus3.ipynb` | deprecated sensitivity/variant provenance | Variant of the directed-results workflow retained to compare alternative directed-analysis settings. | supporting | Alternative core/dose-response/enrichment summaries and figures, used as workflow context rather than the primary manuscript path. |
 | `notebooks/deprecated/04_directed_results_top30.ipynb` | deprecated sensitivity/variant provenance | Directed-results variant using a top-30 core-size setting for robustness/sensitivity comparison. | supporting | Top-30 core score artifacts and comparable directed-analysis summaries/figures. |
-| `notebooks/04_sensitivity_core_score_robustness.ipynb` | sensitivity scaffold / validation-oriented | Primary notebook for read-only robustness/sensitivity validation; validation-oriented, namespaced artifact aware, and the intended consolidation target for historical overlap/sensitivity checks. It is not part of the canonical manuscript regeneration workflow. | supporting | Validates namespaced sensitivity artifacts under `results/sensitivity/`; no manuscript figure generation or artifact regeneration by default. |
+| `notebooks/04_sensitivity_core_score_robustness.ipynb` | robustness/validation | Primary notebook for read-only robustness/sensitivity validation; validation-oriented, namespaced artifact aware, and the intended consolidation target for historical overlap/sensitivity checks. It is not part of the canonical manuscript regeneration workflow. | supporting | Validates namespaced sensitivity artifacts under `results/sensitivity/`; no manuscript figure generation or artifact regeneration by default. |
 | `notebooks/05_ml_baseline_global.ipynb` | exploratory/development | Trains an interpretable global Elastic Net baseline as a modeling sanity check and feature-selection reference. | no | `signature_metadata_with_core_score.csv` and `stable_genes_elasticnet_core_score.csv` exports under `data/exports/`. |
 | `notebooks/06_functional_context.ipynb` | manuscript-associated | Adds functional context for selected/stable genes and upstream enrichment results without redefining the core analyses. | supporting | Functional-context export of stable gene symbols under `data/exports/functional_context/` and interpretation notes. |
 | `notebooks/07_statistical_modeling_core_score.ipynb` | manuscript-associated | Models `core_score` associations with dose and cellular context to provide formal statistical support for directed results. | yes | Statistical model summaries and dose-response interpretation in notebook outputs. |
@@ -21,4 +34,4 @@ This repository keeps the manuscript-associated analysis workflow alongside broa
 
 ## Reproduction guidance
 
-For manuscript-associated reproduction, start with the numbered workflow in `notebooks/` and prioritize `01_filtering.ipynb`, `02_EDA.ipynb`, `03_EDA_subset.ipynb`, `04_directed_results.ipynb`, `06_functional_context.ipynb`, and `07_statistical_modeling_core_score.ipynb`. The deprecated variant, baseline, overlap, and enrichment notebooks should be read as supporting records of the broader research workflow unless a specific check from those notebooks is needed.
+For manuscript-associated reproduction, start with the numbered workflow in `notebooks/` and prioritize `01_filtering.ipynb`, `02_EDA.ipynb`, `03_EDA_subset.ipynb`, `04_directed_results.ipynb`, `06_functional_context.ipynb`, and `07_statistical_modeling_core_score.ipynb`. The robustness/validation, exploratory/future, and dashboard/backend support tracks remain active components of the full platform framing and should be used whenever those objectives are in scope. Deprecated/provenance materials are maintained as provenance/audit records for historical traceability and contextual review.
