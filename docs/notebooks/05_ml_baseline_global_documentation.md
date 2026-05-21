@@ -1,168 +1,75 @@
-# Global Machine Learning Baseline
+# Global ML Baseline and Exploratory Feature Support
 
 ## Overview
 
-This notebook implements a **global machine learning baseline** for the project.  
-Its primary purpose is to establish a **reproducible, interpretable, and conservative reference model** against which more complex or targeted approaches can be evaluated.
+This notebook provides a **global machine learning baseline** for the project and a lightweight bridge to future modeling work.
+It is intentionally practical and conservative: it tests simple predictive structure across all signatures, then exports reusable score/feature artifacts for downstream statistical and biological follow-up.
 
-Rather than optimizing for maximum predictive performance, this baseline emphasizes:
+This notebook currently includes three implemented components:
 
-- Stability
-- Transparency
-- Robustness across conditions
-- Clear separation between signal and noise
-
-All subsequent modeling efforts are expected to be compared against the results obtained here.
+1. **PCA + LogisticRegression classification baseline** for dose-bin discrimination.
+2. **Minimal core-score-only LogisticRegression baseline** using a single biologically informed feature (`core_score`).
+3. **ElasticNet regression on `core_score`** to extract stable candidate genes for future modeling support.
 
 ---
 
-## Objectives
+## Inputs
 
-The specific objectives of this baseline are:
+Primary notebook inputs are:
 
-1. Quantify how much predictive signal is present at a **global level**, without conditioning on specific subgroups.
-2. Evaluate whether linear or weakly regularized relationships are sufficient to explain the target variable.
-3. Provide an interpretable model that allows inspection of feature contributions.
-4. Define a lower-bound performance benchmark for future models.
+- `data/exports/expression_matrix_clean.parquet` (gene expression matrix).
+- `data/exports/signature_metadata_clean.csv` (signature-level metadata).
+- `data/raw_data/geneinfo_beta.txt` (gene metadata used to annotate ElasticNet-selected genes).
 
----
-
-## Data Preparation and Scope
-
-This baseline operates on the **fully aggregated dataset**, using all available samples after standard preprocessing steps defined upstream in the pipeline.
-
-Key characteristics of this approach:
-
-- No stratification by subgroup, condition, or experimental batch.
-- No feature engineering beyond standardized transformations.
-- No domain-specific filtering or manual feature selection.
-
-This design choice is intentional and ensures that the model reflects **global structure only**, without injecting prior biological assumptions.
+The notebook aligns expression columns and metadata rows by `sig_id` and checks required metadata columns such as `cell_id` and `pert_dose`.
 
 ---
 
-## Feature Scaling
+## Implemented Baseline Components
 
-All features are standardized prior to modeling.
+## 1) PCA + LogisticRegression baseline (global dose-bin classification)
 
-**Rationale:**
+- Builds a binary dose label (`dose_bin`) using within-cell-line median split when needed.
+- Uses PCA-reduced gene-expression features plus L2-regularized logistic regression.
+- Evaluates with group-aware cross-validation by cell line to reduce leakage across biological contexts.
 
-- Ensures comparability across features with different scales.
-- Required for regularized linear models.
-- Prevents dominance of high-variance features.
+This component is an **exploratory reference baseline**, not a final predictive endpoint.
 
-Standardization is applied **after train–test splitting** to avoid data leakage.
+## 2) Core-score-only LogisticRegression baseline
 
----
+- Computes/uses `core_score` as a single feature.
+- Fits a minimal logistic regression baseline with group-aware validation.
 
-## Model Selection
+This serves as a compact benchmark for how much signal is captured by the core score alone.
 
-### Baseline Model: Elastic Net Regression
+## 3) ElasticNet regression for core-score-related feature extraction
 
-The primary model used in this baseline is **Elastic Net regression**, which combines:
+- Regresses `core_score` on transcriptome-wide features with ElasticNet and cross-validated hyperparameters.
+- Aggregates coefficient stability information across folds/runs.
+- Annotates selected genes with gene metadata for interpretability.
 
-- **L1 regularization (Lasso):** induces sparsity and performs implicit feature selection.
-- **L2 regularization (Ridge):** improves numerical stability and controls multicollinearity.
-
-#### Why Elastic Net?
-
-Elastic Net was selected because it:
-
-- Handles correlated features gracefully.
-- Produces interpretable coefficients.
-- Provides a smooth transition between sparse and dense solutions.
-- Is well-suited for high-dimensional biological data.
-
-These properties make it ideal as a **first-pass global model**.
+Selected genes are best interpreted as **candidate features associated with the modeled response**, not validated biological mechanisms.
 
 ---
 
-## Training Strategy
+## Outputs
 
-- The dataset is split into training and test sets using a fixed random seed.
-- Hyperparameters are selected via cross-validation on the training set.
-- No manual tuning is performed beyond reasonable defaults.
+This notebook writes:
 
-This strategy ensures:
-
-- Reproducibility
-- Minimal researcher bias
-- Honest generalization estimates
+- `data/exports/signature_metadata_with_core_score.csv` (metadata augmented with computed `core_score`).
+- `data/exports/stable_genes_elasticnet_core_score.csv` (ElasticNet-derived stable gene candidates, annotated where possible).
 
 ---
 
-## Evaluation Metrics
+## Interpretation and Project Role
 
-Model performance is assessed using standard regression metrics, including:
-
-- Coefficient of determination (R²)
-- Error-based metrics (e.g., MSE / RMSE, where applicable)
-
-Metrics are interpreted **comparatively**, not in isolation.
-
-The emphasis is placed on:
-
-- Consistency across cross-validation folds
-- Gap between training and test performance
-- Stability and distribution of coefficients
-
----
-
-## Results Summary
-
-The global baseline demonstrates that:
-
-- A non-trivial fraction of the target variance can be captured using a linear, regularized model.
-- Predictive performance is moderate, indicating the presence of signal but also structural complexity.
-- Coefficients are generally small and distributed, suggesting no single dominant global driver.
-
-This behavior is expected and desirable for a baseline model.
-
----
-
-## Interpretation
-
-Key takeaways from this baseline:
-
-- The problem is **not trivially linear**, but also not purely random.
-- Global patterns exist, but are likely diluted by biological and experimental heterogeneity.
-- More expressive models or stratified approaches may capture additional signal.
-
-Importantly, this baseline confirms that:
-
-> Any future improvement must outperform a strong, well-regularized linear reference.
+- Reported baseline performance is **exploratory/supportive** and should be interpreted as reference-level evidence of learnable structure.
+- The exported stable genes are **feature candidates** for follow-up modeling and functional context, not stand-alone mechanistic proof.
+- Overall, this notebook provides a **reference baseline for future modeling** (e.g., richer statistical models, stratified analyses, or non-linear methods) and reusable artifacts for downstream steps.
 
 ---
 
 ## Limitations
 
-This baseline intentionally does **not**:
-
-- Model non-linear interactions.
-- Account for subgroup-specific effects.
-- Incorporate domain-driven feature engineering.
-- Optimize aggressively for predictive performance.
-
-These limitations define the **scope** of the baseline rather than a weakness.
-
----
-
-## Role in the Project
-
-This module serves as:
-
-- A sanity check
-- A reproducible benchmark
-- A reference point for model complexity justification
-
-All downstream models (e.g., non-linear, cell-specific, compound-specific, or hierarchical models) should be evaluated relative to this baseline.
-
----
-
-## Reproducibility
-
-- All steps are deterministic given the random seed.
-- Results can be regenerated end-to-end.
-- No external dependencies beyond standard scientific Python libraries.
-
-This ensures long-term maintainability and auditability of the modeling process.
+Current scope intentionally does not establish causal claims, definitive mechanistic ranking, or optimized production-grade predictors.
+Its purpose is baseline calibration plus candidate feature generation under transparent, reproducible assumptions.
