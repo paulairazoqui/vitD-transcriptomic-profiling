@@ -46,12 +46,19 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 5) (Optional) Register Jupyter kernel
+## 5) Run tests
+```bash
+python -m pytest -q
+```
+
+These tests are part of reproducibility and developer validation for the repository codebase. This command does **not** execute analysis notebooks.
+
+## 6) (Optional) Register Jupyter kernel
 ```bash
 python -m ipykernel install --user --name vitd_env --display-name "vitd_env (Python 3.11.8)"
 ```
 
-### 6) Deactivate when done
+### 7) Deactivate when done
 ```bash
 deactivate
 ```
