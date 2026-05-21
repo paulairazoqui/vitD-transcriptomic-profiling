@@ -29,8 +29,8 @@ Deprecated directed-results variants and overlap-confirmation history are retain
 - `notebooks/deprecated/04_directed_results_top30.ipynb`
 - `notebooks/deprecated/overlap_confirmation.ipynb`
 
-Current robustness/sensitivity validation should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. The deprecated notebooks are historical/provenance records only and should not be treated as current validation entry points or manuscript-regeneration sources.
+Current robustness and validation checks should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. The deprecated notebooks are deprecated/provenance records only and should not be treated as current validation workflow entry points or manuscript-regeneration sources.
 
 ## Future consolidation
 
-Future consolidation should continue in `notebooks/04_sensitivity_core_score_robustness.ipynb` as a validation-only, namespaced scaffold. Any regeneration capability should remain optional, explicit, and disabled by default, and the scaffold should not write to canonical manuscript output paths.
+Future consolidation should continue in `notebooks/04_sensitivity_core_score_robustness.ipynb` as a validation workflow-only, namespaced scaffold. Any regeneration capability should remain optional, explicit, and disabled by default, and the scaffold should not write to canonical manuscript output paths.

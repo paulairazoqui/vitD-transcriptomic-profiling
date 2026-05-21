@@ -4,7 +4,7 @@
 `notebooks/04_sensitivity_core_score_robustness.ipynb`
 
 ## Five-Track Role
-**Track:** Validation and sensitivity support for directed analyses (non-canonical).
+**Track:** Validation and robustness support for directed analyses (manuscript-associated, non-canonical).
 
 ## Status
 **Active support notebook** for robustness checks.

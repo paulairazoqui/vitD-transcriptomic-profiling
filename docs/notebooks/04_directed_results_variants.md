@@ -19,7 +19,7 @@ Two directed-results variants are retained under `notebooks/deprecated/` for sen
 
 These variants document exploratory parameter choices and robustness-development history. They must not be used to regenerate manuscript figures or overwrite manuscript outputs. Their controlled outputs are now routed to variant-specific directories under `results/sensitivity/plus3/` and `results/sensitivity/top30/`.
 
-Current robustness/sensitivity validation should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. That scaffold performs validation-only checks against retained, namespaced artifacts and does not regenerate manuscript outputs by default. `notebooks/deprecated/overlap_confirmation.ipynb` is retained only for provenance/history, and the directed-results variants remain provenance/development artifacts rather than current validation entry points.
+Current robustness and validation checks should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. That scaffold performs validation-only checks against retained, namespaced artifacts and does not regenerate manuscript outputs by default. `notebooks/deprecated/overlap_confirmation.ipynb` is retained only for deprecated/provenance history, and the directed-results variants remain provenance/development artifacts rather than current validation workflow entry points.
 
 ## Notebook roles and output cautions
 
@@ -32,7 +32,7 @@ Current robustness/sensitivity validation should use `notebooks/04_sensitivity_c
 ## Usage policy
 
 - Variant notebooks must not be used to regenerate manuscript figures.
-- Variants are retained for sensitivity/development provenance only.
+- Variants are retained for robustness/development provenance only.
 - No variant notebook should write to canonical manuscript output paths.
 - Variant-controlled outputs are routed to variant-specific directories: `results/sensitivity/plus3/` for the plus3 variant and `results/sensitivity/top30/` for the top30 variant.
 - Before running a variant, review all save/export cells for table writes, checkpoint writes, figure writes, and any path that is not variant-namespaced.
