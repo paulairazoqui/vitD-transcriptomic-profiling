@@ -58,7 +58,7 @@ These tests are part of reproducibility and developer validation for the reposit
 python -m ipykernel install --user --name vitd_env --display-name "vitd_env (Python 3.11.8)"
 ```
 
-### 7) Deactivate when done
+## 7) Deactivate when done
 ```bash
 deactivate
 ```

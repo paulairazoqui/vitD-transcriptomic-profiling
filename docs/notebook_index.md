@@ -2,7 +2,6 @@
 
 This repository keeps the manuscript-associated analysis workflow alongside broader exploratory, validation, and support notebooks. The main manuscript track is organized around the numbered notebooks in `notebooks/`: dataset definition (`01`), exploratory quality/structure checks (`02`–`03`), directed result generation (`04`), functional interpretation (`06`), and statistical modeling (`07`). Additional notebooks are retained to document sensitivity checks, validation steps, dashboard/database support, or exploratory development work; they are not all required to reproduce the manuscript-associated results.
 
-
 ## Five-track taxonomy
 
 This repository is framed as a **manuscript + vitamin D transcriptomics research platform**. Notebooks and related materials are organized into five active tracks:
@@ -41,7 +40,6 @@ All five tracks are maintained as meaningful parts of the broader platform. Manu
 | `notebooks/07_statistical_modeling_core_score.ipynb` | manuscript-associated | Models `core_score` associations with dose and cellular context to provide formal statistical support for directed results. | canonical | Statistical model summaries and dose-response interpretation in notebook outputs. | [07 statistical modeling documentation](notebooks/07_statistical_modeling_core_score_documentation.md) |
 | `notebooks/deprecated/overlap_confirmation.ipynb` | deprecated historical/provenance-only | Deprecated for current validation workflows; retained for provenance after historical overlap checks were consolidated into `notebooks/04_sensitivity_core_score_robustness.ipynb`. | deprecated/provenance | Historical overlap counts, retained fractions, and score-correlation checks in notebook outputs; not a current validation entry point. | [deprecated overlap confirmation documentation](notebooks/deprecated_overlap_confirmation_documentation.md) |
 | `enrichment/analysis.ipynb` | supporting validation | Examines external VDR ChIP-seq/GEO resources for overlap-style context around VDR-related analyses. | supporting | VDR-overlap exploratory results in notebook outputs; retained as supporting workflow context. | [enrichment analysis documentation](notebooks/enrichment_analysis_documentation.md) |
-
 
 ### Related governance/provenance docs
 
