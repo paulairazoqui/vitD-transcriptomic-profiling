@@ -73,7 +73,7 @@ To prevent silent downstream errors (misalignment, biased summaries, broken mode
 2. **Filter and re-align `sig_meta`** to keep only signatures that truly exist in the cleaned expression matrix.
 3. Keep other metadata tables unchanged (they remain valid reference maps).
 
-**Result:** a final set of **258 expression-complete manuscript signatures** with expression data, consistently aligned with metadata.
+**Result:** a final set of **258 expression-complete manuscript signatures** with expression data, consistently aligned with metadata-level candidates and downstream cleaned exports.
 
 ---
 
@@ -150,9 +150,9 @@ We run PCA on the cleaned expression matrix to:
 - PC2 explains **~5.4%**
 
 ### Interpretation
-- **No strong global separation by compound** in the first two PCs (expected if a shared Vitamin D program dominates).
-- **Clearer structure by cell line** than by compound: cell context contributes more to global variance than analog identity in low-dimensional space.
-- Low variance per PC is typical: transcriptomic variance is distributed across many axes.
+- **No strong global separation by compound** in the first two PCs, consistent with a shared Vitamin D response program.
+- **Clearer structure by cell line** than by compound indicates that cellular context contributes more to global variance than analog identity in low-dimensional space.
+- The modest variance captured by each PC is expected in transcriptomic data, where signal is distributed across many axes.
 
 ---
 
