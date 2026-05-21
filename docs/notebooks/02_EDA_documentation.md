@@ -84,31 +84,31 @@ The global distribution of expression values is bell-shaped and centered at zero
 
 ## Principal Component Analysis (PCA)
 
-PCA was applied to visualize the global structure of the transcriptional signatures and to assess dominant sources of variation.
+PCA was applied to visualize global relationships among transcriptional signatures and assess dominant sources of variation.
 
 ### PCA — Colored by Compound
 
 #### Key Observations
 
 - No strong global separation between compounds is observed.
-- Most vitamin D analogs share overlapping expression profiles, consistent with their shared mechanism of action.
+- Most vitamin D analogs show overlapping expression profiles, consistent with a shared mechanism of action.
 - A subset of signatures from *maxacalcitol* and *paricalcitol* shows greater dispersion, suggesting **compound-specific effects under certain conditions**.
 - The first two components explain **13.6% (PC1)** and **5.4% (PC2)** of the variance, which is typical for high-dimensional biological data.
 
 > **Interpretation:**  
-> While vitamin D analogs induce broadly similar transcriptional programs, subtle compound-specific deviations exist and may reflect differences in potency or pathway engagement.
+> Vitamin D analogs induce broadly similar transcriptional programs, with subtle compound-specific deviations that may reflect differences in potency or pathway engagement.
 
 ---
 
 ### PCA — Colored by Cell Line
 
-When colored by cell line, a clearer structure emerges:
+When colored by cell line, a clearer pattern emerges:
 
 - **PC3 signatures** form a distinct and compact cluster.
 - **MCF7, A549, U2OS, and HA1E** show substantial overlap.
 
 > **Conclusion:**  
-> **Cell line identity explains more variance than compound identity** in the low-dimensional space, highlighting the importance of cellular context in shaping transcriptional responses.
+> **Cell line identity explains more variance than compound identity** in low-dimensional space, highlighting the central role of cellular context in shaping transcriptional responses.
 
 ---
 
@@ -129,16 +129,16 @@ Hierarchical clustering was performed using the **top 100 most variable genes**,
 
 ## UMAP Projection
 
-UMAP was applied as a non-linear dimensionality reduction technique to capture local and global structure in the data.
+UMAP was applied as a non-linear dimensionality reduction technique to capture local and global relationships in the data.
 
 ### Interpretation of UMAP Results
 
 - **PC3 signatures form a clearly separated cluster**, indicating a consistent and distinctive response.
 - Other cell lines show partial overlap, suggesting shared pathways and higher response heterogeneity.
-- UMAP reveals structure not fully captured by PCA, supporting its complementary role.
+- UMAP reveals patterns not fully captured by PCA, supporting its complementary role.
 
 > **Conclusion:**  
-> Non-linear embeddings reinforce the notion that **cell type is a primary driver of transcriptional variability** in response to vitamin D analogs.
+> Non-linear embeddings reinforce the view that **cell type is a primary driver of transcriptional variability** in response to vitamin D analogs.
 
 ---
 
@@ -229,7 +229,7 @@ Two complementary correlation analyses were performed:
 | Gene co-regulation      | Across genes       | Reveals functional gene modules   |
 
 > **Overall conclusion:**  
-> Combining both perspectives provides a holistic view of how vitamin D analogs act at the transcriptomic level.
+> Combining both perspectives distinguishes treatment-level similarity from gene co-regulation and provides a more complete view of vitamin D analog action at the transcriptomic level.
 
 ---
 
