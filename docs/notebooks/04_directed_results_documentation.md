@@ -1,6 +1,6 @@
 # Directed Results — Core Analyses of Vitamin D Signatures
 
-This notebook remains the primary **directed (hypothesis-driven) analysis module** for transcriptomic responses to Vitamin D and selected analogs in the LINCS L1000 dataset, and it is still the manuscript-facing center of the five-track workflow.
+This notebook remains the primary **directed (hypothesis-driven) analysis module** for transcriptomic responses to Vitamin D and selected analogs in the LINCS L1000 dataset, and it is still the manuscript-facing center of the five-track manuscript workflow.
 
 Relative to earlier exploratory notebooks, the explicit aim is to evaluate predefined biological and quantitative questions, including:
 
@@ -51,7 +51,7 @@ To clarify notebook behavior under current implementation:
 
 LINCS L1000 data primarily uses **gene IDs** as stable identifiers, whereas biological interpretation and reporting rely on **gene symbols**.
 
-To maintain interpretability, the workflow constructs ID–symbol mapping via `vitd_utils.idsymbols`, with defensive handling for missing or ambiguous mappings. This mapping step supports coherent linkage across core-signature tables, pathway context summaries, and visualization layers under the current artifact state.
+To maintain interpretability, the execution workflow constructs ID–symbol mapping via `vitd_utils.idsymbols`, with defensive handling for missing or ambiguous mappings. This mapping step supports coherent linkage across core-signature tables, pathway context summaries, and visualization layers under the current artifact state.
 
 ---
 
@@ -137,13 +137,13 @@ Current outputs typically show stronger positive monotonicity in MCF7/A549/PC3, 
 
 ### 6.1 Preranked Gene Lists
 
-Genes are ranked by association with the core response to produce preranked inputs for enrichment workflows. These lists provide standardized pathway-context inputs while remaining contingent on the underlying available artifacts.
+Genes are ranked by association with the core response to produce preranked inputs for enrichment execution workflows. These lists provide standardized pathway-context inputs while remaining contingent on the underlying available artifacts.
 
 ---
 
 ### 6.2 GSEA (Per Cell Line, Resumable)
 
-GSEA-style analysis is applied per cell line via a resumable workflow, with downstream interpretation dependent on successful access to the corresponding generated resources.
+GSEA-style analysis is applied per cell line via a resumable execution workflow, with downstream interpretation dependent on successful access to the corresponding generated resources.
 
 #### Interpretation — Example (A549)
 
