@@ -1,3 +1,11 @@
+**Operational Metadata**
+- **Documented notebook path:** `docs/notebooks/02_EDA_documentation.md`
+- **Five-track role:** Global exploratory analysis track (Track 2 of 5)
+- **Status:** Completed
+- **Purpose:** Document exploratory characterization of metadata quality and expression structure for the curated manuscript subset.
+- **Main inputs:** Filtered signature metadata and cleaned expression matrix from EDA 01 outputs.
+- **Main outputs / artifacts:** EDA findings on quality metrics, distributional properties, variance structure, and exploratory signals used to guide downstream dimensionality reduction and modeling.
+
 # EDA 02 — Exploratory Analysis of Vitamin D–Related Transcriptional Signatures
 
 ## Objective
