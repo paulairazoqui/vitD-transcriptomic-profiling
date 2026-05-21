@@ -37,6 +37,6 @@ Add an external-context validation layer for VDR plausibility and interpretation
 Functions as a supporting context notebook adjacent to the main manuscript workflow.
 
 ## Boundaries and Cautions
-- **Not** a canonical manuscript regeneration notebook.
+- **Not** a canonical manuscript-regeneration notebook.
 - Outputs are **not automatic manuscript evidence** unless explicitly reviewed and promoted elsewhere.
 - Results depend on external reference sets and matching choices, so conclusions should remain conservative.

@@ -6,7 +6,7 @@ The manuscript analyzes vitamin D-related perturbational transcriptomic signatur
 
 ## Start here (60-second navigation)
 
-This repository is intentionally maintained as a **manuscript + future vitamin D transcriptomics research platform** with five complementary tracks:
+This repository is intentionally maintained as a **manuscript + vitamin D transcriptomics research platform** with five complementary tracks:
 
 1. **Manuscript-associated analyses**
 2. **Robustness and validation**
@@ -17,7 +17,7 @@ This repository is intentionally maintained as a **manuscript + future vitamin D
 Quick links:
 - Notebook index: [`docs/notebook_index.md`](docs/notebook_index.md)
 - Environment setup: [`docs/environment_setup.md`](docs/environment_setup.md)
-- Sensitivity/robustness and validation outputs: [`results/sensitivity/README.md`](results/sensitivity/README.md)
+- Sensitivity/validation and robustness outputs: [`results/sensitivity/README.md`](results/sensitivity/README.md)
 - Database documentation: [`docs/database_documentation.md`](docs/database_documentation.md)
 
 ### Track-to-path map

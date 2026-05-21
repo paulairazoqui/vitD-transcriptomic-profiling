@@ -20,7 +20,7 @@ It explicitly checks for required columns used in current analysis, including:
 - `dose_bin`
 - `cell_id`
 
-(`pert_iname` may be useful for future extensions but is not required by the currently implemented core workflow.)
+(`pert_iname` may be useful for future extensions but is not required by the currently implemented core execution workflow.)
 
 ---
 

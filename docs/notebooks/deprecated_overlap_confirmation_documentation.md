@@ -34,5 +34,5 @@ Keep a transparent record of prior confirmation logic during method evolution.
 Belongs to the deprecated notebook set supporting reproducibility and historical review.
 
 ## Boundaries and Cautions
-- **Not** an active operational or manuscript-regeneration workflow.
+- **Not** an active or manuscript-regeneration workflow.
 - Should not drive current conclusions without re-validation in active pipelines.

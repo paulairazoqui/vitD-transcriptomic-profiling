@@ -34,6 +34,6 @@ Maintain an auditable record of earlier analysis choices and outputs.
 Located under `notebooks/deprecated/` as part of the project’s audit trail.
 
 ## Boundaries and Cautions
-- **Not** an active operational workflow.
+- **Not** an active workflow.
 - **Do not treat as current pipeline guidance**.
 - Outputs should not be treated as manuscript claims unless explicitly re-adopted and promoted elsewhere.

@@ -5,15 +5,15 @@ This repository keeps the manuscript-associated analysis workflow alongside broa
 
 ## Five-track taxonomy
 
-This repository is framed as a **manuscript + future vitamin D transcriptomics research platform**. Notebooks and related materials are organized into five active tracks:
+This repository is framed as a **manuscript + vitamin D transcriptomics research platform**. Notebooks and related materials are organized into five active tracks:
 
 1. **Manuscript track** — notebooks and artifacts used to regenerate manuscript-associated analyses.
 2. **Robustness/validation track** — sensitivity checks and validation-focused analyses that test the stability and context of findings.
 3. **Exploratory/future analyses** — hypothesis-generation and forward-looking analyses that support ongoing research extension.
 4. **Dashboard/backend support** — notebook outputs and infrastructure-oriented analyses that feed dashboard/database workflows and operational research support.
-5. **Deprecated/provenance** — historically important records and prior variants maintained for provenance, interpretability, and auditability (not deletion candidates, and not active operational workflows).
+5. **Deprecated/provenance** — historically important records and prior variants maintained for provenance, interpretability, and auditability (not deletion candidates, and not active workflows).
 
-All five tracks are maintained as meaningful parts of the broader platform. Manuscript, robustness/validation, exploratory/future, and dashboard/backend tracks support active research/infrastructure workflows, while deprecated/provenance materials are preserved as maintained provenance and audit records rather than deletion candidates.
+All five tracks are maintained as meaningful parts of the broader platform. Manuscript, robustness/validation, exploratory/future, and backend/dashboard tracks support active research/infrastructure workflows, while deprecated/provenance materials are preserved as maintained provenance and audit records rather than deletion candidates.
 
 ## Terminology note
 
@@ -22,7 +22,7 @@ All five tracks are maintained as meaningful parts of the broader platform. Manu
 - **supporting** = contributes context, validation, interpretation, infrastructure, or future-development value but is not itself a canonical manuscript-regeneration entry point.
 - **validation** = consistency/integrity checks.
 - **robustness** = stability under alternative settings/artifacts.
-- **deprecated/provenance** = retained historical records for auditability, not active operational workflows.
+- **deprecated/provenance** = retained historical records for auditability, not active workflows.
 - **workflow** = use a qualifying prefix where ambiguity exists (for example, manuscript workflow, validation workflow, backend operational workflow).
 
 ## Notebook classification
@@ -35,7 +35,7 @@ All five tracks are maintained as meaningful parts of the broader platform. Manu
 | `notebooks/04_directed_results.ipynb` | manuscript-associated | Runs the primary directed analyses: consensus core definition, `core_score`, dose-response summaries, pathway enrichment, and manuscript figure generation. | canonical | Core gene/score files, dose-response tables, enrichment/preranked outputs, and manuscript figures under `results/`. | [04 directed results documentation](notebooks/04_directed_results_documentation.md) |
 | `notebooks/deprecated/04_directed_results_plus3.ipynb` | deprecated sensitivity/variant provenance | Variant of the directed-results workflow retained to compare alternative directed-analysis settings. | deprecated/provenance | Alternative core/dose-response/enrichment summaries and figures, used as workflow context rather than the primary manuscript path. | [deprecated 04 plus3 documentation](notebooks/deprecated_04_directed_results_plus3_documentation.md) |
 | `notebooks/deprecated/04_directed_results_top30.ipynb` | deprecated sensitivity/variant provenance | Directed-results variant using a top-30 core-size setting for robustness/sensitivity comparison. | deprecated/provenance | Top-30 core score artifacts and comparable directed-analysis summaries/figures. | [deprecated 04 top30 documentation](notebooks/deprecated_04_directed_results_top30_documentation.md) |
-| `notebooks/04_sensitivity_core_score_robustness.ipynb` | robustness/validation | Primary notebook for read-only robustness/sensitivity validation; validation-oriented, namespaced artifact aware, and the intended consolidation target for historical overlap/sensitivity checks. It is not part of the canonical manuscript regeneration workflow. | manuscript-associated | Validates namespaced sensitivity artifacts under `results/sensitivity/`; no manuscript figure generation or artifact regeneration by default. | [04 sensitivity robustness documentation](notebooks/04_sensitivity_core_score_robustness_documentation.md) |
+| `notebooks/04_sensitivity_core_score_robustness.ipynb` | robustness/validation | Primary notebook for read-only robustness/sensitivity validation; validation-oriented, namespaced artifact aware, and the intended consolidation target for historical overlap/sensitivity checks. It is not part of the canonical manuscript-regeneration workflow. | manuscript-associated | Validates namespaced sensitivity artifacts under `results/sensitivity/`; no manuscript figure generation or artifact regeneration by default. | [04 sensitivity robustness documentation](notebooks/04_sensitivity_core_score_robustness_documentation.md) |
 | `notebooks/05_ml_baseline_global.ipynb` | exploratory/development | Trains an interpretable global Elastic Net baseline as a modeling sanity check and feature-selection reference. | exploratory/future | `signature_metadata_with_core_score.csv` and `stable_genes_elasticnet_core_score.csv` exports under `data/exports/`. | [05 ML baseline documentation](notebooks/05_ml_baseline_global_documentation.md) |
 | `notebooks/06_functional_context.ipynb` | manuscript-associated | Adds functional context for selected/stable genes and upstream enrichment results without redefining the core analyses. | manuscript-associated | Functional-context export of stable gene symbols under `data/exports/functional_context/` and interpretation notes. | [06 functional context documentation](notebooks/06_functional_context_documentation.md) |
 | `notebooks/07_statistical_modeling_core_score.ipynb` | manuscript-associated | Models `core_score` associations with dose and cellular context to provide formal statistical support for directed results. | canonical | Statistical model summaries and dose-response interpretation in notebook outputs. | [07 statistical modeling documentation](notebooks/07_statistical_modeling_core_score_documentation.md) |
@@ -52,4 +52,4 @@ The files below are maintained for governance/provenance context and planning; t
 
 ## Reproduction guidance
 
-For manuscript-associated reproduction, start with the numbered workflow in `notebooks/` and prioritize `01_filtering.ipynb`, `02_EDA.ipynb`, `03_EDA_subset.ipynb`, `04_directed_results.ipynb`, `06_functional_context.ipynb`, and `07_statistical_modeling_core_score.ipynb`. The robustness/validation, exploratory/future, and dashboard/backend support tracks remain active components of the full platform framing and should be used whenever those objectives are in scope. Deprecated/provenance materials are maintained as provenance/audit records for historical traceability and contextual review.
+For manuscript-associated reproduction, start with the numbered workflow in `notebooks/` and prioritize `01_filtering.ipynb`, `02_EDA.ipynb`, `03_EDA_subset.ipynb`, `04_directed_results.ipynb`, `06_functional_context.ipynb`, and `07_statistical_modeling_core_score.ipynb`. The robustness/validation, exploratory/future, and backend/dashboard support tracks remain active components of the full platform framing and should be used whenever those objectives are in scope. Deprecated/provenance materials are maintained as provenance/audit records for historical traceability and contextual review.

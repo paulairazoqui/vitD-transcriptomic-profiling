@@ -45,6 +45,6 @@ Provide an auditable validation layer so confidence in core-score conclusions is
 Sits beside directed-analysis materials as **read-only validation support** over existing artifacts and historical result namespaces.
 
 ## Boundaries and Cautions
-- **Not** a canonical manuscript regeneration notebook.
+- **Not** a canonical manuscript-regeneration notebook.
 - **Does not modify manuscript outputs** and should not be used to rewrite canonical results.
 - Interpretation remains supportive/contextual unless explicitly promoted elsewhere in the repository.

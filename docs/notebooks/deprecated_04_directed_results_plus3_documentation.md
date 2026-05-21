@@ -34,6 +34,6 @@ Support provenance, traceability, and retrospective comparisons with current met
 Part of deprecated notebook records, separated from active analysis tracks.
 
 ## Boundaries and Cautions
-- **Not** part of the current workflow.
+- **Not** part of the current manuscript workflow.
 - **Do not run/use as default for present analyses**.
 - Any scientific interpretation requires explicit confirmation in active notebooks before being treated as current evidence.
