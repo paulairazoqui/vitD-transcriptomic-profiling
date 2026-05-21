@@ -82,6 +82,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Optional quick validation:
+
+```bash
+python -m pytest -q
+```
+
 To reproduce the manuscript-associated track, run the relevant notebooks from `notebooks/` in numerical order, starting with `01_filtering.ipynb`. Shared paths and configuration are defined in `src/vitd_utils/`, and analysis outputs are written to the organized `data/` and `results/` subdirectories. Exploratory notebooks, dashboard utilities, and supporting materials can be rerun or inspected independently where their dependencies and local context apply.
 
 ## Data source
