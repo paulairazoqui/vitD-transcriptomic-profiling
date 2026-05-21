@@ -14,24 +14,32 @@ Validate that previously generated core-score sensitivity results remain interna
 
 ## Main Inputs
 - Existing, already-generated directed-analysis and sensitivity artifacts.
-- Namespaced/historical outputs for sensitivity variants such as top30/top50/top100 (where present).
-- Associated metadata needed to align and compare those stored artifacts.
+- Preferred namespaced sensitivity outputs (for example variant-scoped artifacts such as top30/top50/top100 when present in the active namespace).
+- Historical fallback artifacts used only when preferred namespaced resources are unavailable.
+- Associated metadata required to align provenance and compare stored results consistently.
 
 ## Main Outputs / Artifacts
 - Read-only comparison summaries of agreement/disagreement across existing sensitivity artifacts.
 - Diagnostic views highlighting where prior conclusions are stable versus sensitivity-dependent.
 
 ## What the Notebook Does
-- Loads and inspects existing robustness/sensitivity outputs rather than serving as a default regeneration workflow.
+- Loads and inspects existing robustness/sensitivity outputs rather than serving as a regeneration workflow.
+- Applies provenance-aware loading logic, prioritizing current namespaced artifacts and then falling back to historical equivalents when necessary.
 - Compares previously produced variant results (for example, top30/top50/top100 where applicable).
+- Runs validation checks across variants (alignment, overlap, directionality/score consistency as implemented) to identify agreement versus drift.
 - Reports consistency patterns for interpretation support.
+
+## Artifact Consistency Expectations
+- Preferred behavior is cross-variant consistency for core directional conclusions.
+- Minor numeric variation across historical and namespaced artifacts can occur and is interpreted in context.
+- Substantial discordance is treated as a robustness warning that should be surfaced to directed-analysis interpretation rather than silently ignored.
 
 ## Why It Exists
 Provide an auditable validation layer so confidence in core-score conclusions is based on cross-artifact consistency, not a single archived result set.
 
 ## How to Interpret Outputs
 - Treat cross-variant agreement as **robustness support** for existing findings.
-- Treat mismatches as **caution flags** indicating sensitivity to earlier configuration choices.
+- Treat mismatches as **caution flags** indicating sensitivity to earlier configuration choices or artifact lineage.
 
 ## Repository Fit
 Sits beside directed-analysis materials as **read-only validation support** over existing artifacts and historical result namespaces.

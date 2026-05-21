@@ -1,28 +1,49 @@
 # Directed Results — Core Analyses of Vitamin D Signatures
 
-This notebook contains the **directed (hypothesis-driven) analyses** of transcriptomic responses to Vitamin D and selected analogs in the LINCS L1000 dataset.
+This notebook remains the primary **directed (hypothesis-driven) analysis module** for transcriptomic responses to Vitamin D and selected analogs in the LINCS L1000 dataset, and it is still the manuscript-facing center of the five-track workflow.
 
-In contrast to earlier exploratory notebooks, the goal here is to answer **predefined biological and quantitative questions**, focusing on:
+Relative to earlier exploratory notebooks, the explicit aim is to evaluate predefined biological and quantitative questions, including:
 
-- The existence of a **robust Vitamin D core transcriptional signature**
-- The presence of **dose–response relationships** across cell lines
-- The identification of **conserved and context-dependent pathways** via enrichment analysis
+- Whether a **Vitamin D core transcriptional signature** can be operationally defined from current upstream artifacts.
+- Whether that core signal exhibits **dose–response behavior** across cell lines.
+- Whether pathway-level patterns indicate both **conserved** and **context-dependent** biology.
 
-All constants, thresholds, and paths are centralized in `vitd_utils.config`, ensuring reproducibility and consistency across analyses.
+At the current implementation state, this notebook is also artifact-aware: several downstream sections consume previously generated sensitivity/support outputs and may render supplementary products conditionally when those resources are available.
+
+All constants, thresholds, and paths are centralized in `vitd_utils.config`, supporting consistent behavior across directed analyses when the required artifact set is present.
 
 ---
 
 ## Working Hypothesis
 
-Even within a perturbation family sharing a common mechanism of action (Vitamin D and analogs), **cellular context is expected to explain more transcriptomic variability than compound identity**.
+Even within a perturbation family with related mechanism of action (Vitamin D and analogs), **cellular context is expected to explain substantial transcriptomic variability in addition to compound-level effects**.
 
-Specifically, we hypothesize that:
+The notebook evaluates whether, in the present artifact state:
 
-- A **consensus core gene signature** can be defined across cell lines.
-- The activation of this core signature will show **monotonic, dose-dependent behavior** in most cellular contexts.
-- Pathway-level responses will include both **shared transcriptional programs** and **cell line–specific effects**.
+- A consensus core gene signature can be identified across cell lines.
+- Core-signature activation tends to follow monotonic dose behavior in multiple contexts.
+- Pathway-level responses include both shared programs and cell line–specific effects.
 
-This notebook is designed to explicitly test these hypotheses.
+These are interpreted as current observed patterns conditioned on available upstream outputs rather than immutable claims across every runtime configuration.
+
+---
+
+## Operational Output Classes (Canonical vs Supplementary)
+
+To clarify notebook behavior under current implementation:
+
+### Canonical directed outputs
+- Core UP/DOWN signature definitions and core-score summaries used for directed interpretation.
+- Dose-response statistics (Spearman trends and OLS/HC3 slope summaries).
+- Primary manuscript-oriented visualizations generated from available directed-analysis inputs.
+
+### Supplementary/supportive outputs
+- Additional robustness-oriented plots/tables that are produced when expected sensitivity/support artifacts are discoverable at runtime.
+- Expanded diagnostic views used to contextualize directed findings (for example, variant-specific summaries).
+
+### Sensitivity-context integration
+- The notebook can consume previously generated sensitivity artifacts to provide robustness-aware downstream rendering.
+- When such artifacts are absent or partial, the canonical directed sections remain interpretable, while supplementary components may be skipped or reduced.
 
 ---
 
@@ -30,10 +51,7 @@ This notebook is designed to explicitly test these hypotheses.
 
 LINCS L1000 data primarily uses **gene IDs** as stable identifiers, whereas biological interpretation and reporting rely on **gene symbols**.
 
-To ensure consistency, we construct a robust ID–symbol mapping using `vitd_utils.idsymbols`.  
-This guarantees that all downstream analyses (core gene definition, enrichment, plots) use readable gene symbols, with safe fallbacks when annotations are missing or ambiguous.
-
-This step prevents silent mismatches across resources and ensures interpretability of results.
+To maintain interpretability, the workflow constructs ID–symbol mapping via `vitd_utils.idsymbols`, with defensive handling for missing or ambiguous mappings. This mapping step supports coherent linkage across core-signature tables, pathway context summaries, and visualization layers under the current artifact state.
 
 ---
 
@@ -41,17 +59,17 @@ This step prevents silent mismatches across resources and ensures interpretabili
 
 ### Goal
 
-Define a **robust Vitamin D core transcriptional signature**, composed of consistently upregulated (UP) and downregulated (DOWN) genes across contexts (cell lines), and summarize each signature using a single quantitative score.
+Define a Vitamin D core transcriptional signature (UP and DOWN components) that is reproducible from currently available directed-analysis inputs, then summarize each signature with a quantitative core score.
 
 ### Method
 
 1. Construct a gene × context matrix of mean L1000 z-scores (averaged per cell line).
-2. For each context, select the top and bottom `N_TOP` genes based on effect size.
+2. For each context, select top and bottom `N_TOP` genes by effect size.
 3. Perform vote-counting across contexts to identify recurrent genes.
 4. Select `CORE_UP_N` and `CORE_DN_N` genes using:
    - a minimum vote threshold
-   - deterministic tie-breaking based on mean absolute effect size
-5. Compute a **core score** for each signature as:
+   - deterministic tie-breaking by mean absolute effect size
+5. Compute a **core score** as:
 
 \[
 \text{core\_score} =
@@ -60,9 +78,9 @@ Define a **robust Vitamin D core transcriptional signature**, composed of consis
 \mathrm{mean}\big(z(\text{core\_DN})\big)
 \]
 
-Column-wise centering is applied to avoid global shifts dominating the score.
+Column-wise centering is applied to reduce dominance of global shifts.
 
-All thresholds and parameters are defined in `vitd_utils.config`.
+Interpretively, the resulting core signature should be treated as the currently derived consensus under present data and artifact availability.
 
 ---
 
@@ -70,37 +88,32 @@ All thresholds and parameters are defined in `vitd_utils.config`.
 
 ### Goal
 
-Evaluate whether Vitamin D analogs induce a **dose-dependent transcriptional response**, and quantify this relationship using complementary statistical approaches.
+Assess whether Vitamin D analog perturbations show dose-linked transcriptional behavior in the current dataset/runtime state.
 
 ### Methods
 
 1. Bin doses into low vs high categories for visualization (`dose.binarize_dose`).
 2. Test monotonicity using **Spearman correlation** (`dose.dose_monotonicity`).
-3. Estimate effect sizes using **OLS regression** on `log10(dose)` with **HC3 robust errors** (`dose.ols_hc3`).
-4. Summarize slopes across cell lines using **forest plots**.
+3. Estimate effect sizes with **OLS regression** on `log10(dose)` using **HC3 robust errors** (`dose.ols_hc3`).
+4. Summarize slopes across cell lines with forest-plot style rendering.
 
 ---
 
 ### 4.3 Forest Plot — Dose–Response Slopes (OLS + HC3)
 
-We fit the model:
+The model
 
 \[
 \text{core\_score} \sim \log_{10}(\text{dose})
 \]
 
-separately for each cell line using OLS with HC3 robust standard errors.
+is fit per cell line with OLS and HC3 standard errors.
 
-The forest plot displays slope estimates with 95% confidence intervals; a vertical reference line at zero indicates no dose effect.
+The forest plot reports slope estimates and 95% confidence intervals; the zero line indicates no directional dose effect.
 
-#### Interpretation
+#### Interpretation (current observed pattern)
 
-- **MCF7** shows the strongest positive slope with a narrow confidence interval (*p* ≪ 1e−6).
-- **A549** and **PC3** also exhibit robust positive slopes (*p* < 1e−5).
-- **U2OS** displays a weaker but significant positive slope (*p* ≈ 0.043).
-- **HA1E** shows a small, non-significant slope (CI overlaps zero).
-
-These results support **dose-dependent activation of the Vitamin D core signature** in most cell lines.
+In the currently available outputs, MCF7 tends to show the strongest positive slope, A549 and PC3 also show positive dose-linked slopes, U2OS often appears weaker but directionally positive, and HA1E is typically smaller and may not separate clearly from zero depending on artifact state. Collectively, these results are consistent with dose-linked activation in most—but not all—contexts in the present run/artifact configuration.
 
 ---
 
@@ -108,20 +121,15 @@ These results support **dose-dependent activation of the Vitamin D core signatur
 
 ### 5.1 Groupwise Spearman Correlation (FDR-corrected)
 
-Spearman’s ρ is computed between `log10(dose)` and `core_score` within each cell line.  
-Benjamini–Hochberg FDR correction is applied across cell lines.
+Spearman’s ρ is evaluated between `log10(dose)` and `core_score` within each cell line, with Benjamini–Hochberg correction across lines.
 
 ### 5.2 Bootstrap Confidence Intervals
 
-Nonparametric bootstrap is used to estimate confidence intervals for Spearman’s ρ.
+Bootstrap intervals are used to assess uncertainty around Spearman estimates.
 
-#### Interpretation
+#### Interpretation (current observed pattern)
 
-- **MCF7, A549, PC3** show strong positive monotonicity (ρ ≈ 0.55–0.63), significant after FDR.
-- **U2OS** shows a weaker but positive association (ρ ≈ 0.32).
-- **HA1E** shows no clear monotonic relationship (ρ ≈ 0.08).
-
-Overall, four of five cell lines show evidence of monotonic dose-dependent activation.
+Current outputs typically show stronger positive monotonicity in MCF7/A549/PC3, a weaker positive trend in U2OS, and limited monotonic evidence in HA1E. This supports a predominantly monotonic dose-response signal across several contexts while retaining context-dependent heterogeneity.
 
 ---
 
@@ -129,68 +137,51 @@ Overall, four of five cell lines show evidence of monotonic dose-dependent activ
 
 ### 6.1 Preranked Gene Lists
 
-Genes are ranked by their association with the Vitamin D core response, generating **preranked lists** suitable for GSEA and Enrichr.
-
-This ensures standardized and comparable enrichment inputs across contexts.
+Genes are ranked by association with the core response to produce preranked inputs for enrichment workflows. These lists provide standardized pathway-context inputs while remaining contingent on the underlying available artifacts.
 
 ---
 
 ### 6.2 GSEA (Per Cell Line, Resumable)
 
-GSEA is performed independently per cell line using a resumable, permutation-based workflow.
+GSEA-style analysis is applied per cell line via a resumable workflow, with downstream interpretation dependent on successful access to the corresponding generated resources.
 
 #### Interpretation — Example (A549)
 
-Positive enrichment scores highlight activation of:
-
-- **Hallmark**: E2F targets, G2M checkpoint, mTORC1 signaling, MYC targets, unfolded protein response.
-- **Reactome**: DNA repair, chromatin remodeling (PBAF/BAF), metabolic rewiring, histone modification pathways.
-
-Leading-edge fractions (~0.30–0.52) indicate that substantial gene subsets drive these signals.
+In current outputs, positive enrichment frequently highlights programs such as proliferative signaling (for example E2F/G2M-related themes), metabolic adaptation, and stress-associated modules; Reactome-level signals often include DNA repair/chromatin-linked biology. Leading-edge fractions in reported tables can indicate that substantial gene subsets drive these effects, though exact values may vary with available upstream artifacts and filtering state.
 
 ---
 
 ### 6.3 Dot Plot — Consensus Enrichment Across Cell Lines
 
-Dot plots summarize enriched pathways across cell lines.
+Dot plots summarize pathway recurrence across cell lines when enrichment artifacts are present and parseable.
 
-Across Hallmark gene sets, **10 pathways are significant (FDR < 0.05) in at least 4 of 5 cell lines**, including:
-
-- Glycolysis
-- KRAS signaling
-- UV response (early/late)
-- Mitotic spindle
-- Xenobiotic metabolism
-
-This recurrence supports a **conserved Vitamin D transcriptional program** spanning metabolism, stress adaptation, and proliferation.
+Under current artifacts, recurrent Hallmark patterns across multiple lines commonly include metabolism, stress-adaptation, and proliferation-linked programs. The manuscript-facing interpretation is therefore framed as a conserved shared component plus context-specific pathway modulation, rather than a fixed immutable pathway list under all runtime states.
 
 ---
 
 ## 7. Visualization of Directed Results
 
-To support interpretation, we generate publication-ready figures:
+Publication-oriented rendering includes:
 
-1. Forest plots of dose–response slopes
-2. Box/strip plots of core scores by dose and cell line
-3. Dot plots of enriched pathways
+1. Forest plots of dose–response slopes.
+2. Box/strip plots of core scores by dose and cell line.
+3. Dot plots of enriched pathways.
+4. Supplementary/supportive visual layers that are conditionally rendered when prerequisite sensitivity/support resources are already generated.
 
 ### 7.2 Core Scores by Dose and Cell Line
 
-Box/strip plots show higher core scores at high dose in:
-
-- **MCF7, A549, PC3** (clear upward shifts)
-- **U2OS** (modest increase)
-- **HA1E** (overlapping distributions)
-
-This confirms dose-dependent induction at the distribution level.
+In current renders, high-dose groups generally show upward core-score shifts in MCF7/A549/PC3, a smaller directional increase in U2OS, and more overlap in HA1E. This is interpreted as evidence of context-dependent dose responsiveness at the distributional level.
 
 ---
 
 ## Summary
 
-Directed analyses support the following conclusions:
+Within the present implemented notebook behavior and currently available artifact state, directed analyses support the following interpretation:
 
-- A **robust Vitamin D core transcriptional signature** can be defined across cell lines.
-- This core signature shows **monotonic, dose-dependent activation** in most contexts.
-- **Cellular context modulates effect size**, with MCF7, A549, and PC3 showing the strongest responses.
-- Enrichment analyses reveal both **conserved pathways** and **context-specific programs**, consistent with heterogeneous cellular backgrounds.
+- A practical Vitamin D core transcriptional signature can be derived across cell lines.
+- Core-score behavior is broadly compatible with monotonic dose-linked activation in several contexts.
+- Effect magnitude remains context-dependent, with stronger responses often observed in MCF7/A549/PC3 and weaker or less stable trends in HA1E.
+- Pathway interpretation indicates both conserved and context-specific biology.
+- Supplementary robustness-aware views depend on prior sensitivity/support artifact availability and are conditionally rendered when those inputs exist.
+
+This preserves the notebook’s manuscript-oriented role while keeping claims aligned with actual runtime dependencies and artifact provenance.
