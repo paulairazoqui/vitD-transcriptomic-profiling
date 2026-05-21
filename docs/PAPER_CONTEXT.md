@@ -29,7 +29,7 @@ The manuscript should not be reframed as:
 The manuscript evidentiary boundary remains strict and confirmatory: manuscript claims and interpretations are limited to the predefined manuscript dataset, analyses, and reported results above.
 
 The repository may also contain clearly separated materials for:
-- robustness and validation work
+- validation and robustness work
 - exploratory and future vitamin D transcriptomics analyses
 - backend/dashboard support
 - provenance and reproducibility infrastructure

@@ -1,6 +1,6 @@
 # Directed-results notebook variants
 
-This document records the role of the redundant directed-results notebooks so that manuscript regeneration uses the correct source notebook while preserving development provenance for sensitivity checks.
+This document records the role of the redundant directed-results notebooks so that manuscript-regeneration uses the correct source notebook while preserving development provenance for sensitivity checks.
 
 ## Canonical manuscript notebook
 
@@ -19,7 +19,7 @@ Two directed-results variants are retained under `notebooks/deprecated/` for sen
 
 These variants document exploratory parameter choices and robustness-development history. They must not be used to regenerate manuscript figures or overwrite manuscript outputs. Their controlled outputs are now routed to variant-specific directories under `results/sensitivity/plus3/` and `results/sensitivity/top30/`.
 
-Current robustness and validation checks should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. That scaffold performs validation-only checks against retained, namespaced artifacts and does not regenerate manuscript outputs by default. `notebooks/deprecated/overlap_confirmation.ipynb` is retained only for deprecated/provenance history, and the directed-results variants remain provenance/development artifacts rather than current validation workflow entry points.
+Current validation and robustness checks should use `notebooks/04_sensitivity_core_score_robustness.ipynb`. That scaffold performs validation-only checks against retained, namespaced artifacts and does not regenerate manuscript outputs by default. `notebooks/deprecated/overlap_confirmation.ipynb` is retained only for deprecated/provenance history, and the directed-results variants remain provenance/development artifacts rather than current validation workflow entry points.
 
 ## Notebook roles and output cautions
 

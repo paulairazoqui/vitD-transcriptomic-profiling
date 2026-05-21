@@ -1,6 +1,6 @@
 # Backend (Track 4: Dashboard/backend support)
 
-This directory contains Track 4 infrastructure for dashboard/backend support in the future vitamin D transcriptomics platform.
+This directory contains Track 4 infrastructure for backend/dashboard support in the future vitamin D transcriptomics platform.
 
 It provides Django and database infrastructure for storing and querying LINCS metadata and project subset expression values.
 
