@@ -1,3 +1,11 @@
+**Operational Metadata**
+- **Documented notebook path:** `docs/notebooks/01_filtering_documentation.md`
+- **Five-track role:** Data curation and subset-definition track (Track 1 of 5)
+- **Status:** Completed
+- **Purpose:** Document filtering logic and rationale used to define the Vitamin D manuscript subset for downstream analyses.
+- **Main inputs:** LINCS metadata tables (`compoundinfo_beta.txt`, `instinfo_beta.txt`, `siginfo_beta.txt`) and Level 5 matrix (`level5_beta_trt_cp_n720216x12328.gctx`).
+- **Main outputs / artifacts:** Curated Vitamin D subset specification (7 compounds × 5 cell lines × 24 h), selected signature set, and documented filtering decisions for subsequent notebooks.
+
 # EDA 01 — Dataset Filtering and Subset Definition
 
 ## Objective

@@ -1,3 +1,11 @@
+**Operational Metadata**
+- **Documented notebook path:** `docs/notebooks/03_EDA_subset_documentation.md`
+- **Five-track role:** Subset integrity and structure validation track (Track 3 of 5)
+- **Status:** Completed
+- **Purpose:** Document integrity checks, alignment decisions, imbalance assessment, and global structure exploration for the Vitamin D transcriptomic subset.
+- **Main inputs:** Candidate signature metadata, expression matrix exports, and supporting cell/compound/gene metadata tables.
+- **Main outputs / artifacts:** Cleaned aligned expression-complete subset (258 signatures), QC/imbalance diagnostics, and PCA-centered global structure interpretation artifacts.
+
 # EDA 03 — Vitamin D Transcriptomic Subset (LINCS L1000): Integrity Checks + Global Structure
 
 ## Purpose
