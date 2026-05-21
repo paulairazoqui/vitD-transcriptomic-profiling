@@ -63,7 +63,6 @@ The primary manuscript analyses are organized as notebooks in `notebooks/`:
 
 Generated manuscript-associated outputs are organized under `results/`, with figures in `results/figures/`, enrichment outputs in `results/enrichment/`, and tabular outputs in `results/dfs/`.
 
-
 #### Exploratory, development, and supporting materials
 
 Additional notebooks and files document exploratory analyses, supporting checks, analysis variants, dashboard-ready data, and database/dashboard infrastructure. These materials are part of the broader execution workflow and should be interpreted according to their local notebook context rather than as additional manuscript claims.
