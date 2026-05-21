@@ -16,6 +16,7 @@ This repository is intentionally maintained as a **manuscript + vitamin D transc
 
 Quick links:
 - Notebook index: [`docs/notebook_index.md`](docs/notebook_index.md)
+- Reviewer guide: [`docs/reviewer_guide.md`](docs/reviewer_guide.md)
 - Environment setup: [`docs/environment_setup.md`](docs/environment_setup.md)
 - Sensitivity/validation and robustness outputs: [`results/sensitivity/README.md`](results/sensitivity/README.md)
 - Database documentation: [`docs/database_documentation.md`](docs/database_documentation.md)
